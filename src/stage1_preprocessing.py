@@ -3,54 +3,39 @@ import matplotlib.pyplot as plt
 
 
 def preprocess_image(image_path):
-    # Read image
     img = cv2.imread(image_path)
-
     if img is None:
-        raise ValueError("Image not found. Check path!")
+        raise ValueError(f"Image not found: {image_path}")
 
-    # Convert to grayscale
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    gray     = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    clahe    = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+    enhanced = clahe.apply(gray)
+    blurred  = cv2.GaussianBlur(enhanced, (5, 5), 0)
 
-    # Apply CLAHE (improves local contrast)
-    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
-    clahe_img = clahe.apply(gray)
-
-    # Apply Gaussian Blur (removes noise)
-    blurred = cv2.GaussianBlur(clahe_img, (5, 5), 0)
-
-    return img, gray, clahe_img, blurred
+    return img, gray, enhanced, blurred
 
 
-def show_results(original, gray, clahe_img, blurred):
-    plt.figure(figsize=(10, 8))
+def show_stage1(img, gray, enhanced, blurred, save_path="outputs/output_stage1.png"):
+    fig, axes = plt.subplots(1, 4, figsize=(14, 4))
+    fig.suptitle("STAGE 1 — Preprocessing", fontsize=13, fontweight='bold')
 
-    plt.subplot(2, 2, 1)
-    plt.title("Original")
-    plt.imshow(cv2.cvtColor(original, cv2.COLOR_BGR2RGB))
-    plt.axis("off")
+    axes[0].imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+    axes[0].set_title("Original")
+    axes[0].axis("off")
 
-    plt.subplot(2, 2, 2)
-    plt.title("Grayscale")
-    plt.imshow(gray, cmap='gray')
-    plt.axis("off")
+    axes[1].imshow(gray, cmap='gray')
+    axes[1].set_title("Grayscale")
+    axes[1].axis("off")
 
-    plt.subplot(2, 2, 3)
-    plt.title("CLAHE")
-    plt.imshow(clahe_img, cmap='gray')
-    plt.axis("off")
+    axes[2].imshow(enhanced, cmap='gray')
+    axes[2].set_title("CLAHE")
+    axes[2].axis("off")
 
-    plt.subplot(2, 2, 4)
-    plt.title("Blurred")
-    plt.imshow(blurred, cmap='gray')
-    plt.axis("off")
+    axes[3].imshow(blurred, cmap='gray')
+    axes[3].set_title("Blurred (output)")
+    axes[3].axis("off")
 
     plt.tight_layout()
+    plt.savefig(save_path, dpi=120, bbox_inches='tight')
     plt.show()
-
-
-if __name__ == "__main__":
-    image_path = "data/images/test.jpg"
-
-    original, gray, clahe_img, blurred = preprocess_image(image_path)
-    show_results(original, gray, clahe_img, blurred)
+    print(f"✅ Stage 1 done → {save_path}")

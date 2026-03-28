@@ -1,7 +1,6 @@
 opencv-python
 numpy
-PyWavelets
+scipy
 scikit-image
 scikit-learn
 matplotlib
-scipy
