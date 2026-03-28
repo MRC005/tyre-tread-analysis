@@ -1,71 +1,94 @@
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
 from skimage.feature import graycomatrix, graycoprops, local_binary_pattern
+import matplotlib.pyplot as plt
 
 
-def extract_texture_features(roi):
-    # Resize to fixed dimensions for consistent feature extraction
-    roi_resized = cv2.resize(roi, (128, 64))
+def extract_texture_features(image):
+    # -------------------------------
+    # Ensure grayscale
+    # -------------------------------
+    if len(image.shape) == 3:
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    else:
+        gray = image
 
-    # -----------------------------------------------
-    # GLCM — 4 angles, averaged
-    # -----------------------------------------------
-    glcm = graycomatrix(
-        roi_resized,
-        distances=[1],
-        angles=[0, np.pi / 4, np.pi / 2, 3 * np.pi / 4],
-        levels=256,
-        symmetric=True,
-        normed=True
+    # -------------------------------
+    # GLCM
+    # -------------------------------
+    glcm = graycomatrix(gray, distances=[1], angles=[0],
+                        levels=256, symmetric=True, normed=True)
+
+    contrast = graycoprops(glcm, 'contrast')[0, 0]
+    dissimilarity = graycoprops(glcm, 'dissimilarity')[0, 0]
+    homogeneity = graycoprops(glcm, 'homogeneity')[0, 0]
+    energy = graycoprops(glcm, 'energy')[0, 0]
+    correlation = graycoprops(glcm, 'correlation')[0, 0]
+
+    # -------------------------------
+    # LBP
+    # -------------------------------
+    radius = 1
+    n_points = 8 * radius
+
+    lbp = local_binary_pattern(gray, n_points, radius, method='uniform')
+
+    lbp_hist, _ = np.histogram(
+        lbp.ravel(),
+        bins=np.arange(0, n_points + 3),
+        range=(0, n_points + 2)
     )
 
-    glcm_features = np.array([
-        graycoprops(glcm, 'contrast').mean(),
-        graycoprops(glcm, 'dissimilarity').mean(),
-        graycoprops(glcm, 'homogeneity').mean(),
-        graycoprops(glcm, 'energy').mean(),
-        graycoprops(glcm, 'correlation').mean()
-    ])
+    lbp_hist = lbp_hist.astype("float")
+    lbp_hist /= (lbp_hist.sum() + 1e-6)
 
-    # -----------------------------------------------
-    # LBP — radius=3, n_points=24, uniform
-    # -----------------------------------------------
-    lbp      = local_binary_pattern(roi_resized, P=24, R=3, method='uniform')
-    lbp_hist, _ = np.histogram(lbp.ravel(), bins=26, range=(0, 26), density=True)
+    # -------------------------------
+    # Convert to dictionary
+    # -------------------------------
+    glcm_dict = {
+        "contrast": contrast,
+        "dissimilarity": dissimilarity,
+        "homogeneity": homogeneity,
+        "energy": energy,
+        "correlation": correlation
+    }
 
-    # Final feature vector: 5 GLCM + 26 LBP = 31 features
-    feature_vector = np.concatenate([glcm_features, lbp_hist])
+    # Feature vector
+    feat_vec = [
+        contrast,
+        dissimilarity,
+        homogeneity,
+        energy,
+        correlation
+    ]
 
-    return feature_vector, glcm_features, lbp_hist
+    return feat_vec, glcm_dict, lbp_hist, lbp
 
 
-def show_stage4(roi, glcm_features, lbp_hist, save_path="outputs/output_stage4.png"):
-    roi_resized = cv2.resize(roi, (128, 64))
-    lbp_image   = local_binary_pattern(roi_resized, P=24, R=3, method='uniform')
+# -------------------------------
+# SHOW FUNCTION (IMPORTANT)
+# -------------------------------
+def show_stage4(roi, glcm_feats, lbp_hist, lbp_img,
+                save_path="outputs/output_stage4.png"):
 
-    fig, axes = plt.subplots(1, 3, figsize=(14, 4))
-    fig.suptitle("STAGE 4 — Texture Features (GLCM + LBP)", fontsize=13, fontweight='bold')
+    fig, axes = plt.subplots(1, 3, figsize=(12, 4))
 
-    axes[0].imshow(roi,       cmap='gray')
-    axes[0].set_title("ROI")
+    fig.suptitle("Stage 4 — Texture Analysis (GLCM + LBP)",
+                 fontsize=12, fontweight='bold')
+
+    axes[0].imshow(roi, cmap='gray')
+    axes[0].set_title("Tread ROI")
     axes[0].axis("off")
 
-    axes[1].imshow(lbp_image, cmap='gray')
+    axes[1].imshow(lbp_img, cmap='gray')
     axes[1].set_title("LBP Image")
     axes[1].axis("off")
 
-    axes[2].bar(range(26), lbp_hist)
-    axes[2].set_title("LBP Histogram (26 bins)")
-    axes[2].set_xlabel("LBP bin")
-    axes[2].set_ylabel("Normalized frequency")
-
-    feature_labels = ['contrast', 'dissimilarity', 'homogeneity', 'energy', 'correlation']
-    for i, (lbl, val) in enumerate(zip(feature_labels, glcm_features)):
-        axes[2].text(0.98, 0.95 - i * 0.10, f"{lbl}: {val:.4f}",
-                     transform=axes[2].transAxes, ha='right', fontsize=7, color='darkred')
+    axes[2].plot(lbp_hist)
+    axes[2].set_title("LBP Histogram")
 
     plt.tight_layout()
-    plt.savefig(save_path, dpi=120, bbox_inches='tight')
-    plt.show()
-    print(f"✅ Stage 4 done → {save_path}")
+    plt.savefig(save_path, dpi=150)
+    plt.close()
+
+    print(f"  [Stage 4] ✅ Saved → {save_path}")
