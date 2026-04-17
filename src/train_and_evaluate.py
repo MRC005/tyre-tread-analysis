@@ -18,9 +18,10 @@ print("Class distribution:")
 print(df['folder_label'].value_counts())
 
 # -------------------------------
-# FEATURES
+# FEATURES (UPDATED WITH EDGE)
 # -------------------------------
-features = ['tsci', 'contrast', 'dissimilarity', 'homogeneity', 'energy', 'correlation']
+features = ['tsci', 'contrast', 'dissimilarity', 'homogeneity', 'energy', 'correlation', 'edge_density']
+
 X = df[features].values
 y = (df['folder_label'] == 'good').astype(int)  # 1=good, 0=bad
 
@@ -37,21 +38,21 @@ model = Pipeline([
 
 y_pred = cross_val_predict(model, X, y, cv=cv)
 
-print("\n=== FINAL MODEL (SVM) ===")
+print("\n=== FINAL MODEL (SVM + EDGE FEATURE) ===")
 print(classification_report(y, y_pred, target_names=['Bad/Worn', 'Good']))
 
 acc_full = accuracy_score(y, y_pred)
 
 
 # -------------------------------
-# CONFUSION MATRIX (FIXED)
+# CONFUSION MATRIX
 # -------------------------------
 cm = confusion_matrix(y, y_pred)
 
 disp = ConfusionMatrixDisplay(cm, display_labels=['Bad/Worn', 'Good'])
 fig, ax = plt.subplots(figsize=(5, 4))
 disp.plot(ax=ax, colorbar=False)
-ax.set_title("Confusion Matrix — SVM (TSCI + GLCM)")
+ax.set_title("Confusion Matrix — SVM (Enhanced Features)")
 plt.tight_layout()
 plt.savefig("outputs/confusion_matrix.png", dpi=150)
 print("Saved → outputs/confusion_matrix.png")
@@ -66,7 +67,7 @@ print("\n=== BASELINES ===")
 tsci_pred = (df['tsci'] > 0.50).astype(int)
 acc_tsci = accuracy_score(y, tsci_pred)
 
-# Homogeneity baseline (empirical threshold)
+# Homogeneity baseline
 homog_pred = (df['homogeneity'] < 0.25).astype(int)
 acc_homog = accuracy_score(y, homog_pred)
 
@@ -76,14 +77,15 @@ print(f"Proposed SVM Method  : {acc_full:.2%}")
 
 
 # -------------------------------
-# ABLATION STUDY (FIXED)
+# ABLATION STUDY (UPDATED)
 # -------------------------------
 print("\n=== ABLATION STUDY ===")
 
 ablation_configs = {
     'TSCI only': ['tsci'],
     'GLCM only': ['contrast','dissimilarity','homogeneity','energy','correlation'],
-    'TSCI + Homogeneity': ['tsci','homogeneity'],
+    'Edge only': ['edge_density'],
+    'GLCM + Edge': ['contrast','dissimilarity','homogeneity','energy','correlation','edge_density'],
     'Full (All Features)': features,
 }
 

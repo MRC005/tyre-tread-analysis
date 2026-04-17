@@ -4,6 +4,21 @@ from skimage.feature import graycomatrix, graycoprops, local_binary_pattern
 import matplotlib.pyplot as plt
 
 
+# -------------------------------
+# EDGE DENSITY FUNCTION (NEW)
+# -------------------------------
+def compute_edge_density(gray):
+    median = np.median(gray)
+
+    lower = int(max(0, 0.67 * median))
+    upper = int(min(255, 1.33 * median))
+
+    edges = cv2.Canny(gray, lower, upper)
+
+    density = np.count_nonzero(edges) / edges.size
+    return density
+
+
 def extract_texture_features(image):
     # -------------------------------
     # Ensure grayscale
@@ -43,6 +58,11 @@ def extract_texture_features(image):
     lbp_hist /= (lbp_hist.sum() + 1e-6)
 
     # -------------------------------
+    # EDGE FEATURE (NEW)
+    # -------------------------------
+    edge_density = compute_edge_density(gray)
+
+    # -------------------------------
     # Convert to dictionary
     # -------------------------------
     glcm_dict = {
@@ -50,23 +70,27 @@ def extract_texture_features(image):
         "dissimilarity": dissimilarity,
         "homogeneity": homogeneity,
         "energy": energy,
-        "correlation": correlation
+        "correlation": correlation,
+        "edge_density": edge_density
     }
 
-    # Feature vector
+    # -------------------------------
+    # Feature vector (UPDATED)
+    # -------------------------------
     feat_vec = [
         contrast,
         dissimilarity,
         homogeneity,
         energy,
-        correlation
+        correlation,
+        edge_density
     ]
 
     return feat_vec, glcm_dict, lbp_hist, lbp
 
 
 # -------------------------------
-# SHOW FUNCTION (IMPORTANT)
+# SHOW FUNCTION
 # -------------------------------
 def show_stage4(roi, glcm_feats, lbp_hist, lbp_img,
                 save_path="outputs/output_stage4.png"):

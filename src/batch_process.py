@@ -42,11 +42,14 @@ def process_image(image_path, folder_label):
             "tsci": round(tsci, 4),
 
             # GLCM features
-            "contrast": glcm_feats["contrast"],
+            "contrast":      glcm_feats["contrast"],
             "dissimilarity": glcm_feats["dissimilarity"],
-            "homogeneity": glcm_feats["homogeneity"],
-            "energy": glcm_feats["energy"],
-            "correlation": glcm_feats["correlation"],
+            "homogeneity":   glcm_feats["homogeneity"],
+            "energy":        glcm_feats["energy"],
+            "correlation":   glcm_feats["correlation"],
+
+            # Edge feature (NEW)
+            "edge_density":  glcm_feats["edge_density"],   # ← THIS WAS MISSING
         }
 
     except Exception as e:
