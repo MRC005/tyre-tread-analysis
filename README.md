@@ -2,57 +2,58 @@
 
 <p align="center">
 <b>Classical Digital Image Processing Project (No Deep Learning)</b><br>
-Detect tyre wear from a single smartphone image
+Low-cost tyre wear detection using smartphone images
 </p>
 
 <hr>
 
 <h2>📌 Overview</h2>
 <p>
-This project estimates tyre tread wear severity (<b>Safe / Warning / Dangerous</b>) 
-using only <b>classical image processing techniques</b>.  
-It avoids deep learning and focuses on a lightweight, interpretable pipeline.
+This project estimates tyre tread condition (<b>Safe / Warning / Dangerous</b>) 
+using <b>classical image processing and machine learning</b>.  
+It avoids deep learning and focuses on an interpretable, lightweight pipeline 
+suitable for real-world deployment on low-resource devices.
 </p>
 
 <hr>
 
 <h2>🎯 Objective</h2>
 <ul>
-<li>Detect worn-out tyres automatically</li>
-<li>Improve road safety</li>
-<li>Provide low-cost inspection using smartphone images</li>
+<li>Automatically detect worn-out tyres</li>
+<li>Improve road safety through early detection</li>
+<li>Provide a low-cost inspection system using smartphone images</li>
 </ul>
 
 <hr>
 
 <h2>⚙️ System Pipeline</h2>
 
-<h3>1️⃣ Preprocessing (Module M2)</h3>
+<h3>1️⃣ Preprocessing</h3>
 <ul>
 <li>Grayscale conversion</li>
-<li>CLAHE (Contrast enhancement)</li>
-<li>Gaussian Blur (Noise removal)</li>
+<li>CLAHE (contrast enhancement)</li>
+<li>Gaussian blur (noise reduction)</li>
 </ul>
 
-<h3>2️⃣ ROI Extraction (Module M5)</h3>
+<h3>2️⃣ ROI Extraction</h3>
 <ul>
-<li>Canny Edge Detection</li>
-<li>Morphological Operations</li>
-<li>Contour-based tread extraction</li>
+<li>Canny edge detection</li>
+<li>Morphological operations</li>
+<li>Contour-based tread region extraction</li>
 </ul>
 
-<h3>3️⃣ Frequency Analysis (Module M3)</h3>
+<h3>3️⃣ Frequency Analysis</h3>
 <ul>
 <li>2D Discrete Fourier Transform (DFT)</li>
-<li><b>TSCI (Tyre Surface Clarity Index)</b> computation</li>
+<li><b>TSCI (Tyre Surface Clarity Index)</b></li>
 </ul>
 
 <p><b>TSCI Formula:</b><br>
-High Frequency Energy / Total Energy</p>
+High-frequency energy / Total spectral energy</p>
 
-<h3>4️⃣ Texture Analysis (Module M6)</h3>
+<h3>4️⃣ Texture Analysis</h3>
 <ul>
-<li>GLCM Features:
+<li>GLCM features:
   <ul>
     <li>Contrast</li>
     <li>Dissimilarity</li>
@@ -61,13 +62,14 @@ High Frequency Energy / Total Energy</p>
     <li>Correlation</li>
   </ul>
 </li>
-<li>LBP Histogram</li>
+<li>Edge density (structural sharpness)</li>
 </ul>
 
 <h3>5️⃣ Classification</h3>
 <ul>
-<li>SVM (RBF Kernel)</li>
-<li>Balanced Class Weights</li>
+<li>SVM (RBF kernel)</li>
+<li>Standard scaling</li>
+<li>Balanced class weighting</li>
 </ul>
 
 <hr>
@@ -75,9 +77,10 @@ High Frequency Energy / Total Energy</p>
 <h2>📊 Results</h2>
 
 <ul>
-<li><b>Accuracy:</b> ~69%</li>
-<li><b>Worn Tyre Recall:</b> ~70%</li>
-<li><b>Improvement over baseline:</b> 32% → 69%</li>
+<li><b>Accuracy:</b> <b>74.8%</b></li>
+<li><b>Worn Tyre Recall:</b> ~72%</li>
+<li><b>Dataset Size:</b> 369 images</li>
+<li><b>Validation:</b> 5-fold Stratified Cross Validation</li>
 </ul>
 
 <hr>
@@ -91,19 +94,27 @@ High Frequency Energy / Total Energy</p>
 </tr>
 <tr>
 <td>TSCI only</td>
-<td>~63%</td>
+<td>~63.7%</td>
 </tr>
 <tr>
 <td>GLCM only</td>
-<td>~66%</td>
+<td>~66.4%</td>
 </tr>
 <tr>
-<td><b>Combined (TSCI + GLCM)</b></td>
-<td><b>~69%</b></td>
+<td>Edge only</td>
+<td>~64.0%</td>
+</tr>
+<tr>
+<td>GLCM + Edge</td>
+<td>~72.6%</td>
+</tr>
+<tr>
+<td><b>Full (All Features)</b></td>
+<td><b>74.8%</b></td>
 </tr>
 </table>
 
-<p><b>Insight:</b> GLCM provides better discrimination, while TSCI adds interpretability.</p>
+<p><b>Insight:</b> Texture features provide strong discrimination, while frequency and edge features improve robustness.</p>
 
 <hr>
 
@@ -113,7 +124,6 @@ High Frequency Energy / Total Energy</p>
 tyre-tread-project/
 │
 ├── data/
-│   ├── images/
 │   ├── good/
 │   └── bad/
 │
@@ -128,13 +138,10 @@ tyre-tread-project/
 │   └── main.py
 │
 ├── outputs/
-│   ├── output_stage1.png
-│   ├── output_stage2.png
-│   ├── output_stage3.png
-│   ├── output_stage4.png
 │   ├── confusion_matrix.png
 │   ├── ablation.png
-│   └── results.csv
+│   ├── results.csv
+│   └── results_final.csv
 │
 └── requirements.txt
 </pre>
@@ -161,26 +168,28 @@ tyre-tread-project/
 <ul>
 <li>Frequency features capture groove sharpness</li>
 <li>Texture features capture surface consistency</li>
-<li>Combined approach improves performance</li>
-<li>Dataset quality strongly affects results</li>
+<li>Edge density improves structural detection</li>
+<li>Feature fusion significantly improves accuracy</li>
+<li>Dataset quality strongly impacts performance</li>
 </ul>
 
 <hr>
 
 <h2>🚀 Applications</h2>
 <ul>
-<li>Roadside tyre inspection</li>
-<li>Smartphone-based safety tools</li>
-<li>Automated vehicle inspection systems</li>
+<li>Roadside tyre inspection systems</li>
+<li>Smartphone-based vehicle safety tools</li>
+<li>Automated vehicle inspection pipelines</li>
 </ul>
 
 <hr>
 
 <h2>⚠️ Limitations</h2>
 <ul>
-<li>Noisy dataset</li>
-<li>No true 3-class ground truth</li>
-<li>Sensitive to lighting and blur</li>
+<li>Relatively small dataset (369 images)</li>
+<li>Label noise affects performance</li>
+<li>Sensitive to lighting and motion blur</li>
+<li>No true multi-class ground truth</li>
 </ul>
 
 <hr>
@@ -193,5 +202,5 @@ tyre-tread-project/
 <h2>⭐ Note</h2>
 <p>
 This project is implemented entirely using <b>classical digital image processing</b> 
-without deep learning.
+and machine learning techniques without deep learning.
 </p>
