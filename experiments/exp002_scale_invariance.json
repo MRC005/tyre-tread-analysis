@@ -1,0 +1,906 @@
+{
+  "experiment_id": "exp002_scale_invariance",
+  "title": "Resolution stability of every candidate descriptor",
+  "hypothesis": "Descriptors that are dimensionless or purely angular should be insensitive to a change of source resolution, whereas descriptors defined by an absolute spatial-frequency threshold should not be. Resampling above roughly 3x oversampling should suppress the artefact for all of them, because the analysis grid is then filled with genuine detail.",
+  "dataset": "Legacy scraped dataset, the 20 images with native width >= 1400 px. Each downsampled to widths [256, 384, 512, 768, 1024, 1400], so every family member shows the identical tyre.",
+  "method": "tyretread preprocess -> extract_roi -> normalise_scale(256x128, downsample-only) -> spectral + texture descriptors, plus legacy TSCI computed on the un-normalised ROI for comparison.",
+  "validation": "|drift| / SD, where drift is the change in a descriptor's mean across the sweep and SD is its between-tyre standard deviation at 768 px. Reported both for the full sweep and for the portion at or above 3x oversampling.",
+  "metrics": {
+    "n_images": 20,
+    "sweep_widths": [
+      256,
+      384,
+      512,
+      768,
+      1024,
+      1400
+    ],
+    "verdict_counts": {
+      "stable": 46,
+      "marginal": 2
+    },
+    "stable_features": [
+      "spectral_slope_r2",
+      "orientation_entropy",
+      "glcm_energy_d4",
+      "orientation_anisotropy",
+      "lbp_16",
+      "glcm_energy_d2",
+      "glcm_homogeneity_d4",
+      "orientation_coherence",
+      "glcm_energy_d1",
+      "glcm_homogeneity_anisotropy",
+      "lbp_2",
+      "lbp_14",
+      "glcm_energy_anisotropy",
+      "orientation_dominant_deg",
+      "glcm_correlation_anisotropy",
+      "glcm_dissimilarity_d4",
+      "edge_density",
+      "glcm_correlation_d4",
+      "glcm_contrast_d4",
+      "gradient_mean",
+      "glcm_homogeneity_d2",
+      "gradient_p95",
+      "glcm_homogeneity_d1",
+      "lbp_9",
+      "glcm_dissimilarity_d2",
+      "lbp_10",
+      "glcm_dissimilarity_anisotropy",
+      "glcm_correlation_d2",
+      "spectral_slope",
+      "lbp_11",
+      "lbp_0",
+      "lbp_7",
+      "glcm_contrast_d2",
+      "glcm_dissimilarity_d1",
+      "lbp_8",
+      "glcm_contrast_anisotropy",
+      "lbp_6",
+      "glcm_correlation_d1",
+      "lbp_5",
+      "glcm_contrast_d1",
+      "lbp_13",
+      "lbp_15",
+      "lbp_12",
+      "lbp_1",
+      "lbp_3",
+      "lbp_17"
+    ],
+    "resolution_driven_features": [],
+    "legacy_tsci_stability_full_sweep": 1.7090820243015785,
+    "legacy_tsci_stability_above_3x": 0.5289159352435165
+  },
+  "tables": {
+    "per_feature": [
+      {
+        "feature": "spectral_slope_r2",
+        "means": {
+          "256": 0.947695739377467,
+          "384": 0.9518535112428387,
+          "512": 0.9526960713891951,
+          "768": 0.9529153431155052,
+          "1024": 0.952670127178116,
+          "1400": 0.9533224336000791
+        },
+        "drift_full_sweep": 0.005626694222612083,
+        "drift_above_3x": 0.00040709048457387986,
+        "between_tyre_sd": 0.04057715636198702,
+        "stability_full_sweep": 0.13866654854806956,
+        "stability_above_3x": 0.010032504026212277,
+        "verdict": "stable"
+      },
+      {
+        "feature": "orientation_entropy",
+        "means": {
+          "256": 0.8168259101116215,
+          "384": 0.7990298767349585,
+          "512": 0.806268314328797,
+          "768": 0.8263804538032943,
+          "1024": 0.824996130908465,
+          "1400": 0.8288246162885541
+        },
+        "drift_full_sweep": 0.01199870617693255,
+        "drift_above_3x": 0.0024441624852598043,
+        "between_tyre_sd": 0.08405819304416903,
+        "stability_full_sweep": 0.14274285161742337,
+        "stability_above_3x": 0.02907702862439001,
+        "verdict": "stable"
+      },
+      {
+        "feature": "glcm_energy_d4",
+        "means": {
+          "256": 0.08346912319695739,
+          "384": 0.08825342791537726,
+          "512": 0.08554585051984988,
+          "768": 0.09409875180288152,
+          "1024": 0.093302316006224,
+          "1400": 0.09203112346203221
+        },
+        "drift_full_sweep": 0.008562000265074823,
+        "drift_above_3x": -0.002067628340849309,
+        "between_tyre_sd": 0.05197850504926933,
+        "stability_full_sweep": 0.1647219414440466,
+        "stability_above_3x": 0.03977852650609031,
+        "verdict": "stable"
+      },
+      {
+        "feature": "orientation_anisotropy",
+        "means": {
+          "256": 6.680639175211465,
+          "384": 7.036696980942572,
+          "512": 6.777736912724997,
+          "768": 6.262857651323442,
+          "1024": 6.126843075741077,
+          "1400": 6.121034657844207
+        },
+        "drift_full_sweep": -0.5596045173672577,
+        "drift_above_3x": -0.14182299347923433,
+        "between_tyre_sd": 2.950237271055391,
+        "stability_full_sweep": 0.1896811903427245,
+        "stability_above_3x": 0.04807172455946225,
+        "verdict": "stable"
+      },
+      {
+        "feature": "lbp_16",
+        "means": {
+          "256": 0.04423828125,
+          "384": 0.06651893028846154,
+          "512": 0.06895256042480469,
+          "768": 0.080419921875,
+          "1024": 0.0833526611328125,
+          "1400": 0.08360443115234376
+        },
+        "drift_full_sweep": 0.03936614990234376,
+        "drift_above_3x": 0.003184509277343761,
+        "between_tyre_sd": 0.06003545346330151,
+        "stability_full_sweep": 0.6557150422193031,
+        "stability_above_3x": 0.05304381150865112,
+        "verdict": "stable"
+      },
+      {
+        "feature": "glcm_energy_d2",
+        "means": {
+          "256": 0.1064457870260295,
+          "384": 0.1089621684020097,
+          "512": 0.10512608404014755,
+          "768": 0.11371027359259536,
+          "1024": 0.11222258430446903,
+          "1400": 0.11035954413196687
+        },
+        "drift_full_sweep": 0.003913757105937374,
+        "drift_above_3x": -0.0033507294606284904,
+        "between_tyre_sd": 0.055274585573483,
+        "stability_full_sweep": 0.07080572500601306,
+        "stability_above_3x": 0.060619712040608106,
+        "verdict": "stable"
+      },
+      {
+        "feature": "glcm_homogeneity_d4",
+        "means": {
+          "256": 0.4096329669309913,
+          "384": 0.3853566537086335,
+          "512": 0.38300576702143607,
+          "768": 0.37922384745146254,
+          "1024": 0.37422056394336556,
+          "1400": 0.37460480871761603
+        },
+        "drift_full_sweep": -0.03502815821337529,
+        "drift_above_3x": -0.004619038733846503,
+        "between_tyre_sd": 0.0676757092972361,
+        "stability_full_sweep": 0.5175883426582107,
+        "stability_above_3x": 0.0682525352421411,
+        "verdict": "stable"
+      },
+      {
+        "feature": "orientation_coherence",
+        "means": {
+          "256": 0.46733690601174,
+          "384": 0.5319365288139273,
+          "512": 0.53657526484331,
+          "768": 0.5021739379363608,
+          "1024": 0.49770793950189,
+          "1400": 0.4901766478445305
+        },
+        "drift_full_sweep": 0.022839741832790528,
+        "drift_above_3x": -0.01199729009183026,
+        "between_tyre_sd": 0.17503416384311024,
+        "stability_full_sweep": 0.13048733647942384,
+        "stability_above_3x": 0.06854256236847502,
+        "verdict": "stable"
+      },
+      {
+        "feature": "glcm_energy_d1",
+        "means": {
+          "256": 0.11846167084849309,
+          "384": 0.11971330036527951,
+          "512": 0.11526500468106868,
+          "768": 0.1230683031277749,
+          "1024": 0.12110609771329606,
+          "1400": 0.11886266242008474
+        },
+        "drift_full_sweep": 0.00040099157159165233,
+        "drift_above_3x": -0.004205640707690167,
+        "between_tyre_sd": 0.05472628290548442,
+        "stability_full_sweep": 0.007327221040833138,
+        "stability_above_3x": 0.07684864537490262,
+        "verdict": "stable"
+      },
+      {
+        "feature": "glcm_homogeneity_anisotropy",
+        "means": {
+          "256": 0.08396970765441245,
+          "384": 0.09031822584989865,
+          "512": 0.09056318970549754,
+          "768": 0.08296613897325338,
+          "1024": 0.08129801046943542,
+          "1400": 0.08082169630573102
+        },
+        "drift_full_sweep": -0.003148011348681423,
+        "drift_above_3x": -0.0021444426675223532,
+        "between_tyre_sd": 0.026568705562673163,
+        "stability_full_sweep": 0.11848568765443053,
+        "stability_above_3x": 0.0807131029573047,
+        "verdict": "stable"
+      },
+      {
+        "feature": "lbp_2",
+        "means": {
+          "256": 0.03055419921875,
+          "384": 0.031191312349759616,
+          "512": 0.03173828125,
+          "768": 0.029669189453125,
+          "1024": 0.0298675537109375,
+          "1400": 0.03015289306640625
+        },
+        "drift_full_sweep": -0.0004013061523437528,
+        "drift_above_3x": 0.0004837036132812472,
+        "between_tyre_sd": 0.005695888291335424,
+        "stability_full_sweep": 0.07045541131033399,
+        "stability_above_3x": 0.08492154138926081,
+        "verdict": "stable"
+      },
+      {
+        "feature": "lbp_14",
+        "means": {
+          "256": 0.031451416015625,
+          "384": 0.03037438025841346,
+          "512": 0.030298233032226562,
+          "768": 0.02889404296875,
+          "1024": 0.0284759521484375,
+          "1400": 0.0285369873046875
+        },
+        "drift_full_sweep": -0.0029144287109374965,
+        "drift_above_3x": -0.0003570556640624979,
+        "between_tyre_sd": 0.004173256213250788,
+        "stability_full_sweep": 0.6983584429069313,
+        "stability_above_3x": 0.08555805007341422,
+        "verdict": "stable"
+      },
+      {
+        "feature": "glcm_energy_anisotropy",
+        "means": {
+          "256": 0.07104371716106062,
+          "384": 0.06880750720526986,
+          "512": 0.06951746655380137,
+          "768": 0.05862277156243885,
+          "1024": 0.056802369237321584,
+          "1400": 0.05643376447582987
+        },
+        "drift_full_sweep": -0.014609952685230743,
+        "drift_above_3x": -0.0021890070866089767,
+        "between_tyre_sd": 0.02431527391434858,
+        "stability_full_sweep": 0.6008549497198683,
+        "stability_above_3x": 0.09002600975501375,
+        "verdict": "stable"
+      },
+      {
+        "feature": "orientation_dominant_deg",
+        "means": {
+          "256": 76.13333878046159,
+          "384": 94.79418252094129,
+          "512": 99.26028333737213,
+          "768": 81.43057282449611,
+          "1024": 80.67542039261845,
+          "1400": 88.76966831401447
+        },
+        "drift_full_sweep": 12.636329533552882,
+        "drift_above_3x": 7.339095489518357,
+        "between_tyre_sd": 73.74682306990263,
+        "stability_full_sweep": 0.17134744260881915,
+        "stability_above_3x": 0.09951744609475346,
+        "verdict": "stable"
+      },
+      {
+        "feature": "glcm_correlation_anisotropy",
+        "means": {
+          "256": 0.03001188698465517,
+          "384": 0.03846630928989813,
+          "512": 0.03946737005845957,
+          "768": 0.04120851468174413,
+          "1024": 0.04238671839074157,
+          "1400": 0.04365502719489344
+        },
+        "drift_full_sweep": 0.01364314021023827,
+        "drift_above_3x": 0.0024465125131493126,
+        "between_tyre_sd": 0.024167630332324757,
+        "stability_full_sweep": 0.5645212220906184,
+        "stability_above_3x": 0.10123096387638164,
+        "verdict": "stable"
+      },
+      {
+        "feature": "glcm_dissimilarity_d4",
+        "means": {
+          "256": 2.5725487744883653,
+          "384": 3.0040052987562693,
+          "512": 3.0514847289366838,
+          "768": 3.2311731911118984,
+          "1024": 3.3108725619212356,
+          "1400": 3.347829165279621
+        },
+        "drift_full_sweep": 0.7752803907912558,
+        "drift_above_3x": 0.11665597416772266,
+        "between_tyre_sd": 0.9548499536226474,
+        "stability_full_sweep": 0.8119394967239463,
+        "stability_above_3x": 0.12217204779152621,
+        "verdict": "stable"
+      },
+      {
+        "feature": "edge_density",
+        "means": {
+          "256": 0.143902587890625,
+          "384": 0.15772892878605768,
+          "512": 0.17160415649414062,
+          "768": 0.17086181640625,
+          "1024": 0.17627105712890626,
+          "1400": 0.18052520751953124
+        },
+        "drift_full_sweep": 0.036622619628906256,
+        "drift_above_3x": 0.009663391113281239,
+        "between_tyre_sd": 0.07323234275775954,
+        "stability_full_sweep": 0.5000880519424022,
+        "stability_above_3x": 0.13195523657144406,
+        "verdict": "stable"
+      },
+      {
+        "feature": "glcm_correlation_d4",
+        "means": {
+          "256": 0.7982184007614402,
+          "384": 0.7627483613812838,
+          "512": 0.7630878300411194,
+          "768": 0.7554120612272481,
+          "1024": 0.7451162587926181,
+          "1400": 0.7396757294331027
+        },
+        "drift_full_sweep": -0.05854267132833757,
+        "drift_above_3x": -0.015736331794145464,
+        "between_tyre_sd": 0.11737268609627854,
+        "stability_full_sweep": 0.49877593565777434,
+        "stability_above_3x": 0.1340714975308417,
+        "verdict": "stable"
+      },
+      {
+        "feature": "glcm_contrast_d4",
+        "means": {
+          "256": 16.028168153866194,
+          "384": 22.45694506499982,
+          "512": 23.40902013205624,
+          "768": 26.724246863931302,
+          "1024": 28.0482204675113,
+          "1400": 28.952593836652973
+        },
+        "drift_full_sweep": 12.92442568278678,
+        "drift_above_3x": 2.2283469727216705,
+        "between_tyre_sd": 15.238029934888713,
+        "stability_full_sweep": 0.8481690702808801,
+        "stability_above_3x": 0.1462358967821482,
+        "verdict": "stable"
+      },
+      {
+        "feature": "gradient_mean",
+        "means": {
+          "256": 74.59508367482552,
+          "384": 87.12872187109163,
+          "512": 90.14662832394583,
+          "768": 96.27856916785672,
+          "1024": 99.17916032205942,
+          "1400": 100.94511976279696
+        },
+        "drift_full_sweep": 26.350036087971446,
+        "drift_above_3x": 4.666550594940247,
+        "between_tyre_sd": 31.121400833568035,
+        "stability_full_sweep": 0.8466854120380687,
+        "stability_above_3x": 0.1499466755978038,
+        "verdict": "stable"
+      },
+      {
+        "feature": "glcm_homogeneity_d2",
+        "means": {
+          "256": 0.5664534167142203,
+          "384": 0.5347196726333269,
+          "512": 0.5243940424184436,
+          "768": 0.5144274923073346,
+          "1024": 0.504495296672294,
+          "1400": 0.4997241997713731
+        },
+        "drift_full_sweep": -0.06672921694284722,
+        "drift_above_3x": -0.014703292535961532,
+        "between_tyre_sd": 0.08729173021829871,
+        "stability_full_sweep": 0.7644391602271045,
+        "stability_above_3x": 0.16843855081336587,
+        "verdict": "stable"
+      },
+      {
+        "feature": "gradient_p95",
+        "means": {
+          "256": 230.80862138281174,
+          "384": 275.6021618398248,
+          "512": 286.1922096922475,
+          "768": 306.6342808901159,
+          "1024": 317.0035280633219,
+          "1400": 325.245348514348
+        },
+        "drift_full_sweep": 94.43672713153626,
+        "drift_above_3x": 18.611067624232078,
+        "between_tyre_sd": 88.67935528014605,
+        "stability_full_sweep": 1.0649234743893001,
+        "stability_above_3x": 0.20986922565503596,
+        "verdict": "stable"
+      },
+      {
+        "feature": "glcm_homogeneity_d1",
+        "means": {
+          "256": 0.6353045334542632,
+          "384": 0.6025675023331868,
+          "512": 0.5886538935702341,
+          "768": 0.5746800759689129,
+          "1024": 0.5619199751349285,
+          "1400": 0.5543330731379774
+        },
+        "drift_full_sweep": -0.08097146031628577,
+        "drift_above_3x": -0.02034700283093549,
+        "between_tyre_sd": 0.09116475603523991,
+        "stability_full_sweep": 0.888188197256691,
+        "stability_above_3x": 0.22318935206792323,
+        "verdict": "stable"
+      },
+      {
+        "feature": "lbp_9",
+        "means": {
+          "256": 0.090216064453125,
+          "384": 0.08498676006610577,
+          "512": 0.07864189147949219,
+          "768": 0.07549285888671875,
+          "1024": 0.071484375,
+          "1400": 0.06914520263671875
+        },
+        "drift_full_sweep": -0.021070861816406244,
+        "drift_above_3x": -0.00634765625,
+        "between_tyre_sd": 0.024949044726675522,
+        "stability_full_sweep": 0.844555855634716,
+        "stability_above_3x": 0.2544248214527062,
+        "verdict": "stable"
+      },
+      {
+        "feature": "glcm_dissimilarity_d2",
+        "means": {
+          "256": 1.3801960020392667,
+          "384": 1.6270827584043148,
+          "512": 1.7225603573558073,
+          "768": 1.8894537797176774,
+          "1024": 1.988655206084648,
+          "1400": 2.0599978772471905
+        },
+        "drift_full_sweep": 0.6798018752079238,
+        "drift_above_3x": 0.17054409752951316,
+        "between_tyre_sd": 0.6631107516568508,
+        "stability_full_sweep": 1.0251709439326213,
+        "stability_above_3x": 0.2571879540535138,
+        "verdict": "stable"
+      },
+      {
+        "feature": "lbp_10",
+        "means": {
+          "256": 0.044927978515625,
+          "384": 0.042100172776442304,
+          "512": 0.039173126220703125,
+          "768": 0.03729400634765625,
+          "1024": 0.0352691650390625,
+          "1400": 0.03433380126953125
+        },
+        "drift_full_sweep": -0.010594177246093753,
+        "drift_above_3x": -0.002960205078125,
+        "between_tyre_sd": 0.010983659526122774,
+        "stability_full_sweep": 0.9645398440198639,
+        "stability_above_3x": 0.2695099088864375,
+        "verdict": "stable"
+      },
+      {
+        "feature": "glcm_dissimilarity_anisotropy",
+        "means": {
+          "256": 0.17694707743351884,
+          "384": 0.18136694258911842,
+          "512": 0.17939855241089045,
+          "768": 0.16587271934205988,
+          "1024": 0.1579710977586835,
+          "1400": 0.1538338980242947
+        },
+        "drift_full_sweep": -0.02311317940922414,
+        "drift_above_3x": -0.01203882131776518,
+        "between_tyre_sd": 0.042088419193281566,
+        "stability_full_sweep": 0.5491576982989568,
+        "stability_above_3x": 0.2860364335015675,
+        "verdict": "stable"
+      },
+      {
+        "feature": "glcm_correlation_d2",
+        "means": {
+          "256": 0.9348132661014527,
+          "384": 0.920996913808704,
+          "512": 0.9127929930484006,
+          "768": 0.9009838459808529,
+          "1024": 0.8910108629492447,
+          "1400": 0.8832917422417348
+        },
+        "drift_full_sweep": -0.051521523859717866,
+        "drift_above_3x": -0.017692103739118115,
+        "between_tyre_sd": 0.060393711349666986,
+        "stability_full_sweep": 0.8530941832903594,
+        "stability_above_3x": 0.2929461254117093,
+        "verdict": "stable"
+      },
+      {
+        "feature": "spectral_slope",
+        "means": {
+          "256": 3.5133894844403977,
+          "384": 3.4264041158953593,
+          "512": 3.053311879014046,
+          "768": 2.974715397447903,
+          "1024": 2.8440768098129463,
+          "1400": 2.758444293846627
+        },
+        "drift_full_sweep": -0.7549451905937707,
+        "drift_above_3x": -0.21627110360127588,
+        "between_tyre_sd": 0.7365799514685146,
+        "stability_full_sweep": 1.0249331238090875,
+        "stability_above_3x": 0.2936152459350782,
+        "verdict": "stable"
+      },
+      {
+        "feature": "lbp_11",
+        "means": {
+          "256": 0.03543701171875,
+          "384": 0.033731313852163464,
+          "512": 0.031707763671875,
+          "768": 0.03154754638671875,
+          "1024": 0.030126953125,
+          "1400": 0.0294097900390625
+        },
+        "drift_full_sweep": -0.0060272216796875,
+        "drift_above_3x": -0.0021377563476562486,
+        "between_tyre_sd": 0.0070788604412674325,
+        "stability_full_sweep": 0.8514395402614207,
+        "stability_above_3x": 0.3019915939003163,
+        "verdict": "stable"
+      },
+      {
+        "feature": "lbp_0",
+        "means": {
+          "256": 0.038372802734375,
+          "384": 0.042496901292067304,
+          "512": 0.04744720458984375,
+          "768": 0.0487579345703125,
+          "1024": 0.0517669677734375,
+          "1400": 0.05434417724609375
+        },
+        "drift_full_sweep": 0.015971374511718747,
+        "drift_above_3x": 0.005586242675781249,
+        "between_tyre_sd": 0.018442616308469804,
+        "stability_full_sweep": 0.8660037298712258,
+        "stability_above_3x": 0.302898600846332,
+        "verdict": "stable"
+      },
+      {
+        "feature": "lbp_7",
+        "means": {
+          "256": 0.0892578125,
+          "384": 0.08173311673677884,
+          "512": 0.07303619384765625,
+          "768": 0.071990966796875,
+          "1024": 0.0676513671875,
+          "1400": 0.063079833984375
+        },
+        "drift_full_sweep": -0.026177978515625006,
+        "drift_above_3x": -0.0089111328125,
+        "between_tyre_sd": 0.02879187050043144,
+        "stability_full_sweep": 0.9092142351512985,
+        "stability_above_3x": 0.30950169813963524,
+        "verdict": "stable"
+      },
+      {
+        "feature": "glcm_contrast_d2",
+        "means": {
+          "256": 5.147808566668141,
+          "384": 7.348714314570092,
+          "512": 8.455778232709282,
+          "768": 10.623815439387291,
+          "1024": 11.830265542476425,
+          "1400": 12.815203506127679
+        },
+        "drift_full_sweep": 7.6673949394595375,
+        "drift_above_3x": 2.1913880667403873,
+        "between_tyre_sd": 6.853807132413683,
+        "stability_full_sweep": 1.118705967548774,
+        "stability_above_3x": 0.31973296365120407,
+        "verdict": "stable"
+      },
+      {
+        "feature": "glcm_dissimilarity_d1",
+        "means": {
+          "256": 1.0251025262467184,
+          "384": 1.215297551580443,
+          "512": 1.3099972042751022,
+          "768": 1.4654306177749135,
+          "1024": 1.5649488680499257,
+          "1400": 1.6409607402877473
+        },
+        "drift_full_sweep": 0.6158582140410289,
+        "drift_above_3x": 0.17553012251283384,
+        "between_tyre_sd": 0.5338033362946529,
+        "stability_full_sweep": 1.1537174314344913,
+        "stability_above_3x": 0.3288291971557543,
+        "verdict": "stable"
+      },
+      {
+        "feature": "lbp_8",
+        "means": {
+          "256": 0.156085205078125,
+          "384": 0.14430823692908654,
+          "512": 0.13553428649902344,
+          "768": 0.12847137451171875,
+          "1024": 0.11969757080078125,
+          "1400": 0.10754852294921875
+        },
+        "drift_full_sweep": -0.04853668212890626,
+        "drift_above_3x": -0.020922851562499997,
+        "between_tyre_sd": 0.05919169335263255,
+        "stability_full_sweep": 0.8199914444033656,
+        "stability_above_3x": 0.35347614466531313,
+        "verdict": "stable"
+      },
+      {
+        "feature": "glcm_contrast_anisotropy",
+        "means": {
+          "256": 0.31113886029716387,
+          "384": 0.321859932056667,
+          "512": 0.31806997559545536,
+          "768": 0.29174760856149573,
+          "1024": 0.2755075000900374,
+          "1400": 0.2670344690542693
+        },
+        "drift_full_sweep": -0.04410439124289456,
+        "drift_above_3x": -0.024713139507226423,
+        "between_tyre_sd": 0.069689475484051,
+        "stability_full_sweep": 0.6328701850107655,
+        "stability_above_3x": 0.3546179582436695,
+        "verdict": "stable"
+      },
+      {
+        "feature": "lbp_6",
+        "means": {
+          "256": 0.05025634765625,
+          "384": 0.04620830829326923,
+          "512": 0.04300689697265625,
+          "768": 0.0407562255859375,
+          "1024": 0.03826446533203125,
+          "1400": 0.036981201171875
+        },
+        "drift_full_sweep": -0.013275146484375,
+        "drift_above_3x": -0.0037750244140625014,
+        "between_tyre_sd": 0.010402316152498063,
+        "stability_full_sweep": 1.2761721802876604,
+        "stability_above_3x": 0.36290229586570955,
+        "verdict": "stable"
+      },
+      {
+        "feature": "glcm_correlation_d1",
+        "means": {
+          "256": 0.9627794426499546,
+          "384": 0.9542515700041801,
+          "512": 0.9476341393695009,
+          "768": 0.9375490689026549,
+          "1024": 0.9291865970984858,
+          "1400": 0.922329989839478
+        },
+        "drift_full_sweep": -0.04044945281047663,
+        "drift_above_3x": -0.015219079063176877,
+        "between_tyre_sd": 0.04012534853013098,
+        "stability_full_sweep": 1.008077295081992,
+        "stability_above_3x": 0.3792883955076065,
+        "verdict": "stable"
+      },
+      {
+        "feature": "lbp_5",
+        "means": {
+          "256": 0.037274169921875,
+          "384": 0.036013089693509616,
+          "512": 0.03325843811035156,
+          "768": 0.0307586669921875,
+          "1024": 0.02924041748046875,
+          "1400": 0.02840576171875
+        },
+        "drift_full_sweep": -0.008868408203125004,
+        "drift_above_3x": -0.0023529052734375007,
+        "between_tyre_sd": 0.0057552050285560015,
+        "stability_full_sweep": 1.5409369708154628,
+        "stability_above_3x": 0.4088308343078877,
+        "verdict": "stable"
+      },
+      {
+        "feature": "glcm_contrast_d1",
+        "means": {
+          "256": 2.942556449745249,
+          "384": 4.2308845008892355,
+          "512": 5.041646969942312,
+          "768": 6.6525432917076674,
+          "1024": 7.635516667450679,
+          "1400": 8.472172727174026
+        },
+        "drift_full_sweep": 5.529616277428778,
+        "drift_above_3x": 1.819629435466359,
+        "between_tyre_sd": 4.334874076109691,
+        "stability_full_sweep": 1.2756117433499479,
+        "stability_above_3x": 0.41976523504908253,
+        "verdict": "stable"
+      },
+      {
+        "feature": "lbp_13",
+        "means": {
+          "256": 0.030584716796875,
+          "384": 0.028839111328125,
+          "512": 0.02700042724609375,
+          "768": 0.02491607666015625,
+          "1024": 0.02360992431640625,
+          "1400": 0.02330322265625
+        },
+        "drift_full_sweep": -0.007281494140625001,
+        "drift_above_3x": -0.0016128540039062507,
+        "between_tyre_sd": 0.0037222623561645016,
+        "stability_full_sweep": 1.9562012141798644,
+        "stability_above_3x": 0.4332993888072333,
+        "verdict": "stable"
+      },
+      {
+        "feature": "lbp_15",
+        "means": {
+          "256": 0.0257080078125,
+          "384": 0.026442307692307692,
+          "512": 0.030071258544921875,
+          "768": 0.03179168701171875,
+          "1024": 0.03391265869140625,
+          "1400": 0.03622894287109375
+        },
+        "drift_full_sweep": 0.010520935058593753,
+        "drift_above_3x": 0.004437255859375003,
+        "between_tyre_sd": 0.009867928019385123,
+        "stability_full_sweep": 1.066174686106934,
+        "stability_above_3x": 0.4496643926321922,
+        "verdict": "stable"
+      },
+      {
+        "feature": "lbp_12",
+        "means": {
+          "256": 0.02955322265625,
+          "384": 0.027808556189903848,
+          "512": 0.025867462158203125,
+          "768": 0.02376251220703125,
+          "1024": 0.0223052978515625,
+          "1400": 0.02191162109375
+        },
+        "drift_full_sweep": -0.007641601562499999,
+        "drift_above_3x": -0.0018508911132812493,
+        "between_tyre_sd": 0.004038390951849186,
+        "stability_full_sweep": 1.892239174862676,
+        "stability_above_3x": 0.4583239055727686,
+        "verdict": "stable"
+      },
+      {
+        "feature": "lbp_1",
+        "means": {
+          "256": 0.02469482421875,
+          "384": 0.026700533353365384,
+          "512": 0.030210494995117188,
+          "768": 0.03211822509765625,
+          "1024": 0.03449859619140625,
+          "1400": 0.03653564453125
+        },
+        "drift_full_sweep": 0.0118408203125,
+        "drift_above_3x": 0.00441741943359375,
+        "between_tyre_sd": 0.009518776899925627,
+        "stability_full_sweep": 1.2439434642692924,
+        "stability_above_3x": 0.46407426920871153,
+        "verdict": "stable"
+      },
+      {
+        "feature": "lbp_3",
+        "means": {
+          "256": 0.03468017578125,
+          "384": 0.032113882211538464,
+          "512": 0.029998779296875,
+          "768": 0.02729034423828125,
+          "1024": 0.025848388671875,
+          "1400": 0.02554779052734375
+        },
+        "drift_full_sweep": -0.009132385253906253,
+        "drift_above_3x": -0.0017425537109375007,
+        "between_tyre_sd": 0.003635178725962018,
+        "stability_full_sweep": 2.5122245541006922,
+        "stability_above_3x": 0.47935846963792655,
+        "verdict": "stable"
+      },
+      {
+        "feature": "lbp_17",
+        "means": {
+          "256": 0.17449951171875,
+          "384": 0.18777935321514422,
+          "512": 0.2150726318359375,
+          "768": 0.23004302978515626,
+          "1024": 0.2500335693359375,
+          "1400": 0.26697235107421874
+        },
+        "drift_full_sweep": 0.09247283935546874,
+        "drift_above_3x": 0.03692932128906248,
+        "between_tyre_sd": 0.07674318147158997,
+        "stability_full_sweep": 1.204964891763079,
+        "stability_above_3x": 0.48120654605300117,
+        "verdict": "stable"
+      },
+      {
+        "feature": "legacy_tsci",
+        "means": {
+          "256": 0.4363020326586171,
+          "384": 0.47726118315572397,
+          "512": 0.5177982646958721,
+          "768": 0.5472031273764613,
+          "1024": 0.5742439773730791,
+          "1400": 0.5969057554862345
+        },
+        "drift_full_sweep": 0.16060372282761737,
+        "drift_above_3x": 0.04970262810977322,
+        "between_tyre_sd": 0.09397075186795002,
+        "stability_full_sweep": 1.7090820243015785,
+        "stability_above_3x": 0.5289159352435165,
+        "verdict": "marginal"
+      },
+      {
+        "feature": "lbp_4",
+        "means": {
+          "256": 0.032208251953125,
+          "384": 0.030653733473557692,
+          "512": 0.02898406982421875,
+          "768": 0.026025390625,
+          "1024": 0.0245941162109375,
+          "1400": 0.02395782470703125
+        },
+        "drift_full_sweep": -0.008250427246093754,
+        "drift_above_3x": -0.00206756591796875,
+        "between_tyre_sd": 0.003583699352770048,
+        "stability_full_sweep": 2.30220965375249,
+        "stability_above_3x": 0.5769362087728171,
+        "verdict": "marginal"
+      }
+    ]
+  },
+  "interpretation": "Scale normalisation works. Once every ROI is resampled downwards onto a common analysis grid and only the part of the sweep at or above 3x oversampling is considered, 46 of 48 descriptors are stable, meaning their pure-resolution drift is under half of their between-tyre spread. The two exceptions are legacy TSCI (0.53) and one LBP bin (0.58), both marginal. Across the unrestricted sweep, which includes the 1x-2x region, many descriptors are not stable - legacy TSCI reaches 1.71 and several LBP bins exceed 1.0 - which is what makes the oversampling floor necessary rather than merely prudent. The theoretical prediction held for the spectral slope, whose drift falls from 1.02 over the full sweep to 0.29 above 3x, consistent with a power-law exponent being preserved under isotropic rescaling. It did not hold as cleanly for the angular statistics: orientation entropy and anisotropy are computed over a fixed band of normalised frequency, and rescaling moves physical content in and out of that band, so their invariance depends on normalisation rather than following from the mathematics alone.",
+  "decision": "Adopt the scale-invariant spectral descriptors and the multi-angle, multi-distance texture descriptors as the production feature set, with scale normalisation applied before any of them. Set the quality gate's oversampling floor from this evidence rather than by convention: the stability results do not support analysing images below roughly 3x oversampling. orientation_dominant_deg is retained as reported evidence but excluded from the model, because an absolute groove angle measures how the phone was held rather than the state of the tyre. The cost of the floor is quantified separately in exp003.",
+  "seed": 42,
+  "config": {
+    "scale": "ScaleConfig(analysis_width=256, analysis_height=128, min_native_width=256, min_native_height=128, allow_upsampling=False)",
+    "spectral": "SpectralConfig(slope_band=(0.08, 0.6), orientation_bins=36, legacy_hf_radius_fraction=0.2)",
+    "texture": "TextureConfig(levels=32, distances=(1, 2, 4), angles_deg=(0.0, 45.0, 90.0, 135.0), lbp_radius=2, lbp_points=16)"
+  },
+  "timestamp": "2026-09-11T11:01:50+00:00",
+  "git_commit": "d839469",
+  "git_dirty": true,
+  "python": "3.12.12"
+}

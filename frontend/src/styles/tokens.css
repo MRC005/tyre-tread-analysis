@@ -1,0 +1,124 @@
+/*
+ * Design tokens — light theme.
+ *
+ * Direction derived from reviewing production field-inspection and automotive service
+ * software. Three principles were taken from that research and applied here:
+ *
+ *   1. **Never pure white.** #FFFFFF on a phone in daylight is glare; a soft neutral
+ *      ground (#F7F8FA) with white cards reads as paper and keeps cards distinguishable
+ *      from the page without heavy borders.
+ *   2. **Status must survive bad conditions.** Inspection tools get used outdoors, at
+ *      arm's length, sometimes with gloves. Status colours are darkened well past their
+ *      decorative versions to clear 4.5:1 on their own tinted backgrounds, and every
+ *      status carries a glyph and a word as well as a colour.
+ *   3. **Large, unambiguous targets.** 48px minimum, generous spacing, no dense rows.
+ *
+ * Colour carries meaning and nothing else:
+ *   blue   = action and product identity
+ *   green  = healthy
+ *   amber  = attention recommended
+ *   red    = high risk
+ *   slate  = information
+ */
+
+:root {
+  color-scheme: light;
+
+  /* Surfaces. The page is a soft neutral; cards are white and sit on top of it. */
+  --bg: #f7f8fa;
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --surface-sunken: #eef1f5;
+  --surface-inset: #f2f4f7;
+  --border: #e3e7ed;
+  --border-strong: #ccd3dc;
+
+  /* Text. Near-black rather than black: pure #000 on white vibrates slightly. */
+  --text: #131820;
+  --text-secondary: #4a5566;
+  /* 5.16:1 on white and 4.85:1 on the page ground. An earlier, lighter value measured
+     3.74:1 - below AA for small text, and muted text is used at 12px for captions and
+     hints, so it is small text by definition. */
+  --text-muted: #636e80;
+
+  /* Product colour. Used for the primary action, focus, and identity — never status. */
+  --accent: #1a63d8;
+  --accent-hover: #1552b8;
+  --accent-soft: #eaf1fd;
+  --accent-ink: #ffffff;
+
+  /* Status. Foreground values are darkened for contrast on their own tints; the
+     --*-solid values are for filled indicators where white text sits on top. */
+  --ok: #0f7a48;
+  --ok-solid: #16a35e;
+  --ok-bg: #e7f6ee;
+  --ok-border: #bfe6d2;
+
+  --caution: #8a5a06;
+  --caution-solid: #c8860d;
+  --caution-bg: #fdf3e0;
+  --caution-border: #f2ddb4;
+
+  --alert: #b3261e;
+  --alert-solid: #d9382e;
+  --alert-bg: #fdecea;
+  --alert-border: #f6c9c5;
+
+  --unknown: #4a5566;
+  --unknown-solid: #6b7688;
+  --unknown-bg: #eef1f5;
+  --unknown-border: #dbe1e9;
+
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+
+  /* A wider scale than before. Hierarchy is carried by type size and weight rather
+     than by wrapping everything in another bordered box - the "card soup" look comes
+     from using containers to do a job typography should be doing. */
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.9375rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 2rem;
+  --text-3xl: 2.75rem;
+  --text-4xl: 3.5rem;
+
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 24px;
+  --s6: 32px;
+  --s7: 48px;
+  --s8: 64px;
+
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 14px;
+
+  /* Shadows are light and short. On a light ground a heavy shadow reads as a template;
+     elevation here is about separating a card from the page, nothing more. */
+  /* Layered rather than a single blur: a tight contact shadow plus a wider ambient
+     one reads as a physical object on paper. One big soft shadow reads as a template. */
+  --shadow-sm: 0 1px 1px rgba(19, 24, 32, 0.04), 0 1px 3px rgba(19, 24, 32, 0.04);
+  --shadow: 0 1px 2px rgba(19, 24, 32, 0.05), 0 4px 12px -2px rgba(19, 24, 32, 0.06);
+  --shadow-lg: 0 2px 4px rgba(19, 24, 32, 0.04), 0 12px 32px -8px rgba(19, 24, 32, 0.12);
+
+  --touch: 48px;
+  --transition: 140ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  --max-width: 560px;
+  --max-width-wide: 960px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --transition: 1ms linear; }
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}

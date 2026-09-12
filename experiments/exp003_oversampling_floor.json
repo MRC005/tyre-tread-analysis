@@ -1,0 +1,142 @@
+{
+  "experiment_id": "exp003_oversampling_floor",
+  "title": "Cost of enforcing resolution correctness on the legacy dataset",
+  "hypothesis": "Enforcing downsample-only scale normalisation requires rejecting images that cannot fill the analysis grid. If the legacy dataset's resolution distribution is adequate, a scientifically defensible floor should retain most of it. If not, the dataset cannot support the corrected pipeline at any grid size.",
+  "dataset": "Legacy scraped dataset, all 369 images (234 serviceable / 135 worn).",
+  "method": "Full tyretread pipeline at each candidate analysis grid, with the quality gate's oversampling floor set to each candidate value. An image is kept only if its ROI can be downsampled onto the grid without upsampling and clears every other quality check.",
+  "validation": "Descriptive. Counts surviving images and class balance per configuration; no model is fitted, because the question is whether enough usable data exists to fit one.",
+  "metrics": {
+    "grids": [
+      "96x48",
+      "128x64",
+      "192x96",
+      "256x128"
+    ],
+    "floors": [
+      1.0,
+      2.0,
+      3.0
+    ],
+    "baseline_n": 369,
+    "baseline_fraction_serviceable": 0.6341463414634146,
+    "best_at_3x": {
+      "grid": "96x48",
+      "oversampling_floor": 3.0,
+      "kept": 80,
+      "serviceable": 32,
+      "worn": 48,
+      "fraction_serviceable": 0.4
+    }
+  },
+  "tables": {
+    "sweep": [
+      {
+        "grid": "96x48",
+        "oversampling_floor": 1.0,
+        "kept": 289,
+        "serviceable": 165,
+        "worn": 124,
+        "fraction_serviceable": 0.5709342560553633
+      },
+      {
+        "grid": "96x48",
+        "oversampling_floor": 2.0,
+        "kept": 268,
+        "serviceable": 150,
+        "worn": 118,
+        "fraction_serviceable": 0.5597014925373134
+      },
+      {
+        "grid": "96x48",
+        "oversampling_floor": 3.0,
+        "kept": 80,
+        "serviceable": 32,
+        "worn": 48,
+        "fraction_serviceable": 0.4
+      },
+      {
+        "grid": "128x64",
+        "oversampling_floor": 1.0,
+        "kept": 289,
+        "serviceable": 165,
+        "worn": 124,
+        "fraction_serviceable": 0.5709342560553633
+      },
+      {
+        "grid": "128x64",
+        "oversampling_floor": 2.0,
+        "kept": 82,
+        "serviceable": 33,
+        "worn": 49,
+        "fraction_serviceable": 0.4024390243902439
+      },
+      {
+        "grid": "128x64",
+        "oversampling_floor": 3.0,
+        "kept": 76,
+        "serviceable": 29,
+        "worn": 47,
+        "fraction_serviceable": 0.3815789473684211
+      },
+      {
+        "grid": "192x96",
+        "oversampling_floor": 1.0,
+        "kept": 268,
+        "serviceable": 150,
+        "worn": 118,
+        "fraction_serviceable": 0.5597014925373134
+      },
+      {
+        "grid": "192x96",
+        "oversampling_floor": 2.0,
+        "kept": 76,
+        "serviceable": 29,
+        "worn": 47,
+        "fraction_serviceable": 0.3815789473684211
+      },
+      {
+        "grid": "192x96",
+        "oversampling_floor": 3.0,
+        "kept": 61,
+        "serviceable": 21,
+        "worn": 40,
+        "fraction_serviceable": 0.3442622950819672
+      },
+      {
+        "grid": "256x128",
+        "oversampling_floor": 1.0,
+        "kept": 82,
+        "serviceable": 33,
+        "worn": 49,
+        "fraction_serviceable": 0.4024390243902439
+      },
+      {
+        "grid": "256x128",
+        "oversampling_floor": 2.0,
+        "kept": 64,
+        "serviceable": 24,
+        "worn": 40,
+        "fraction_serviceable": 0.375
+      },
+      {
+        "grid": "256x128",
+        "oversampling_floor": 3.0,
+        "kept": 33,
+        "serviceable": 7,
+        "worn": 26,
+        "fraction_serviceable": 0.21212121212121213
+      }
+    ]
+  },
+  "interpretation": "The legacy dataset cannot support a resolution-correct pipeline. At the 3x floor that exp002 shows is needed for descriptor stability, every grid retains at most 80 of 369 images, and the class balance inverts from 63% serviceable to 34-40% - because the worn examples were scraped from systematically larger source images, which is the same confound exp001 identified, now visible as a survival bias. Relaxing the floor to 1x keeps 289 images but reinstates the artefact the correction exists to remove. There is no configuration that is both honest and adequately powered on this data.",
+  "decision": "The legacy dataset is retired from training. Its remaining roles are to reproduce the original published result and to serve as an out-of-domain robustness check where its resolution permits. Training requires a dataset whose images are large enough that the oversampling floor is never the binding constraint - which is the scientific argument for the Mendeley phone-camera dataset, independent of its size. The production grid is deferred until it can be chosen on data that can actually support the measurement.",
+  "seed": 42,
+  "config": {
+    "grids": "[(96, 48), (128, 64), (192, 96), (256, 128)]",
+    "floors": "[1.0, 2.0, 3.0]"
+  },
+  "timestamp": "2026-09-11T11:01:25+00:00",
+  "git_commit": "d839469",
+  "git_dirty": true,
+  "python": "3.12.12"
+}

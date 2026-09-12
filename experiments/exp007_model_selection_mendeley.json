@@ -1,0 +1,703 @@
+{
+  "experiment_id": "exp007_model_selection_mendeley",
+  "title": "Model selection on mendeley_tyres",
+  "hypothesis": "Among lightweight classifiers on engineered texture and frequency features, a regularised linear model will be competitive with or better than an RBF-SVM and tree ensembles, and its probabilities will calibrate well enough to support a principled abstention band.",
+  "dataset": "mendeley_tyres: 1856 images, 1695 passing the quality gate (91%). worn=941, serviceable=754.",
+  "method": "46 features from tyretread.features (scale-normalised ROI). Each candidate is a scaler-plus-estimator pipeline wrapped in Platt scaling, so scaling and calibration are fitted inside every fold. orientation_dominant_deg is excluded as an artefact of camera pose.",
+  "validation": "5-fold x 5 repeats, group-aware (StratifiedGroupKFold), seed 42. Model choice by paired t-test on identical folds. Threshold and abstention band chosen from averaged out-of-fold probabilities, never from in-sample predictions.",
+  "metrics": {
+    "ranking": [
+      {
+        "model": "svm_rbf_c10",
+        "balanced_accuracy": 0.9116561773996464,
+        "balanced_accuracy_std": 0.014181247432189044,
+        "accuracy": 0.9132743362831859,
+        "recall_worn": 0.9264629066756725,
+        "f1_worn": 0.9222599101360001,
+        "roc_auc": 0.9697058668255135,
+        "delta_vs_best": 0.0,
+        "p_value": null,
+        "significant": null
+      },
+      {
+        "model": "svm_rbf_c1",
+        "balanced_accuracy": 0.8907271885504942,
+        "balanced_accuracy_std": 0.01786095129933604,
+        "accuracy": 0.8915634218289087,
+        "recall_worn": 0.8983991894630193,
+        "f1_worn": 0.9019184725129322,
+        "roc_auc": 0.9566945485821443,
+        "delta_vs_best": -0.020928988849152286,
+        "p_value": 1.2580762097260143e-09,
+        "significant": true
+      },
+      {
+        "model": "svm_linear",
+        "balanced_accuracy": 0.8806777265600713,
+        "balanced_accuracy_std": 0.0192353666546193,
+        "accuracy": 0.8818879056047197,
+        "recall_worn": 0.8918101992570078,
+        "f1_worn": 0.8934865260154876,
+        "roc_auc": 0.947880755835178,
+        "delta_vs_best": -0.030978450839575178,
+        "p_value": 1.2500467897788553e-10,
+        "significant": true
+      },
+      {
+        "model": "logistic_l2",
+        "balanced_accuracy": 0.8781031529083382,
+        "balanced_accuracy_std": 0.018688945968376156,
+        "accuracy": 0.8791740412979351,
+        "recall_worn": 0.8879837892603851,
+        "f1_worn": 0.8909269422432381,
+        "roc_auc": 0.9481752351330107,
+        "delta_vs_best": -0.03355302449130826,
+        "p_value": 1.2836022977450846e-11,
+        "significant": true
+      },
+      {
+        "model": "logistic_l2_strong",
+        "balanced_accuracy": 0.8761817307111657,
+        "balanced_accuracy_std": 0.020156456975801252,
+        "accuracy": 0.8769321533923304,
+        "recall_worn": 0.8830901722391085,
+        "f1_worn": 0.8885944762015496,
+        "roc_auc": 0.9411351140991836,
+        "delta_vs_best": -0.035474446688480765,
+        "p_value": 1.5513288731282913e-11,
+        "significant": true
+      },
+      {
+        "model": "random_forest",
+        "balanced_accuracy": 0.8710968615548861,
+        "balanced_accuracy_std": 0.017456720911944872,
+        "accuracy": 0.8709144542772862,
+        "recall_worn": 0.8694979173702579,
+        "f1_worn": 0.882048433992074,
+        "roc_auc": 0.9471326997844681,
+        "delta_vs_best": -0.04055931584476036,
+        "p_value": 9.123539900226122e-15,
+        "significant": true
+      }
+    ],
+    "winner": {
+      "model": "svm_rbf_c10",
+      "n_samples": 1695,
+      "n_features": 46,
+      "validation": "5-fold x 5 repeats, group-aware (StratifiedGroupKFold), seed 42",
+      "metrics": {
+        "accuracy": {
+          "mean": 0.9132743362831859,
+          "std": 0.013505042055763538,
+          "n_folds": 25
+        },
+        "balanced_accuracy": {
+          "mean": 0.9116561773996464,
+          "std": 0.014181247432189044,
+          "n_folds": 25
+        },
+        "precision": {
+          "mean": 0.9185082243357765,
+          "std": 0.019223932879195313,
+          "n_folds": 25
+        },
+        "recall": {
+          "mean": 0.9264629066756725,
+          "std": 0.017316453336217834,
+          "n_folds": 25
+        },
+        "f1": {
+          "mean": 0.9222599101360001,
+          "std": 0.011983821653707065,
+          "n_folds": 25
+        },
+        "roc_auc": {
+          "mean": 0.9697058668255135,
+          "std": 0.008445362688257239,
+          "n_folds": 25
+        }
+      },
+      "confusion_matrix": [
+        [
+          3381,
+          389
+        ],
+        [
+          346,
+          4359
+        ]
+      ]
+    },
+    "majority_class_accuracy": 0.5551622418879056,
+    "calibration": {
+      "brier_score": 0.06914904551559344,
+      "expected_calibration_error": 0.06600735604354112,
+      "n_scored": 1695
+    },
+    "threshold_choice": {
+      "threshold": 0.51,
+      "abstain_band": 0.2,
+      "balanced_accuracy_on_decided": 0.9598289748433926,
+      "recall_worn_on_decided": 0.9646017699115044,
+      "abstention_rate": 0.16578171091445426,
+      "target_recall_worn": 0.8
+    },
+    "quality_gate_pass_rate": 0.9132543103448276,
+    "data_hygiene": {
+      "n_exact_groups": 28,
+      "n_contradictory_groups": 0,
+      "n_near_pairs": 125,
+      "n_cross_label_near_pairs": 36,
+      "contradictory_groups": []
+    }
+  },
+  "tables": {
+    "threshold_sweep": [
+      {
+        "threshold": 0.1,
+        "balanced_accuracy": 0.702649982946073,
+        "recall_worn": 0.9968119022316685,
+        "recall_serviceable": 0.40848806366047746
+      },
+      {
+        "threshold": 0.11,
+        "balanced_accuracy": 0.7173706227079382,
+        "recall_worn": 0.9957492029755579,
+        "recall_serviceable": 0.4389920424403183
+      },
+      {
+        "threshold": 0.12,
+        "balanced_accuracy": 0.7326226120978585,
+        "recall_worn": 0.9957492029755579,
+        "recall_serviceable": 0.46949602122015915
+      },
+      {
+        "threshold": 0.13,
+        "balanced_accuracy": 0.7404441631877595,
+        "recall_worn": 0.9914984059511158,
+        "recall_serviceable": 0.48938992042440316
+      },
+      {
+        "threshold": 0.14,
+        "balanced_accuracy": 0.7498597631618262,
+        "recall_worn": 0.9904357066950054,
+        "recall_serviceable": 0.5092838196286472
+      },
+      {
+        "threshold": 0.15,
+        "balanced_accuracy": 0.7617961026843727,
+        "recall_worn": 0.9904357066950054,
+        "recall_serviceable": 0.53315649867374
+      },
+      {
+        "threshold": 0.16,
+        "balanced_accuracy": 0.7730693122334443,
+        "recall_worn": 0.9904357066950054,
+        "recall_serviceable": 0.5557029177718833
+      },
+      {
+        "threshold": 0.17,
+        "balanced_accuracy": 0.784342521782516,
+        "recall_worn": 0.9904357066950054,
+        "recall_serviceable": 0.5782493368700266
+      },
+      {
+        "threshold": 0.18,
+        "balanced_accuracy": 0.7950843817035322,
+        "recall_worn": 0.9893730074388948,
+        "recall_serviceable": 0.6007957559681698
+      },
+      {
+        "threshold": 0.19,
+        "balanced_accuracy": 0.8050313313056543,
+        "recall_worn": 0.9893730074388948,
+        "recall_serviceable": 0.6206896551724138
+      },
+      {
+        "threshold": 0.2,
+        "balanced_accuracy": 0.8136520209608267,
+        "recall_worn": 0.9893730074388948,
+        "recall_serviceable": 0.6379310344827587
+      },
+      {
+        "threshold": 0.21,
+        "balanced_accuracy": 0.8255883604833731,
+        "recall_worn": 0.9893730074388948,
+        "recall_serviceable": 0.6618037135278515
+      },
+      {
+        "threshold": 0.22,
+        "balanced_accuracy": 0.8363302204043894,
+        "recall_worn": 0.9883103081827843,
+        "recall_serviceable": 0.6843501326259946
+      },
+      {
+        "threshold": 0.23,
+        "balanced_accuracy": 0.8411039105641327,
+        "recall_worn": 0.9872476089266737,
+        "recall_serviceable": 0.6949602122015915
+      },
+      {
+        "threshold": 0.24,
+        "balanced_accuracy": 0.8478669906443002,
+        "recall_worn": 0.9861849096705633,
+        "recall_serviceable": 0.7095490716180372
+      },
+      {
+        "threshold": 0.25,
+        "balanced_accuracy": 0.8584770702198969,
+        "recall_worn": 0.9861849096705633,
+        "recall_serviceable": 0.7307692307692307
+      },
+      {
+        "threshold": 0.26,
+        "balanced_accuracy": 0.8631147517878435,
+        "recall_worn": 0.9808714133900106,
+        "recall_serviceable": 0.7453580901856764
+      },
+      {
+        "threshold": 0.27,
+        "balanced_accuracy": 0.8692147018945362,
+        "recall_worn": 0.9798087141339001,
+        "recall_serviceable": 0.7586206896551724
+      },
+      {
+        "threshold": 0.28,
+        "balanced_accuracy": 0.8714676525057998,
+        "recall_worn": 0.9776833156216791,
+        "recall_serviceable": 0.7652519893899205
+      },
+      {
+        "threshold": 0.29,
+        "balanced_accuracy": 0.8757099930374876,
+        "recall_worn": 0.975557917109458,
+        "recall_serviceable": 0.7758620689655172
+      },
+      {
+        "threshold": 0.3,
+        "balanced_accuracy": 0.8769002443926406,
+        "recall_worn": 0.971307120085016,
+        "recall_serviceable": 0.7824933687002652
+      },
+      {
+        "threshold": 0.31,
+        "balanced_accuracy": 0.8796845446319593,
+        "recall_worn": 0.9702444208289054,
+        "recall_serviceable": 0.7891246684350133
+      },
+      {
+        "threshold": 0.32,
+        "balanced_accuracy": 0.8836633244728082,
+        "recall_worn": 0.9702444208289054,
+        "recall_serviceable": 0.7970822281167109
+      },
+      {
+        "threshold": 0.33,
+        "balanced_accuracy": 0.8876421043136569,
+        "recall_worn": 0.9702444208289054,
+        "recall_serviceable": 0.8050397877984085
+      },
+      {
+        "threshold": 0.34,
+        "balanced_accuracy": 0.8936102740749301,
+        "recall_worn": 0.9702444208289054,
+        "recall_serviceable": 0.8169761273209549
+      },
+      {
+        "threshold": 0.35,
+        "balanced_accuracy": 0.8955996639953545,
+        "recall_worn": 0.9702444208289054,
+        "recall_serviceable": 0.8209549071618037
+      },
+      {
+        "threshold": 0.36,
+        "balanced_accuracy": 0.8982521838892538,
+        "recall_worn": 0.9702444208289054,
+        "recall_serviceable": 0.8262599469496021
+      },
+      {
+        "threshold": 0.37,
+        "balanced_accuracy": 0.9023627440755222,
+        "recall_worn": 0.9691817215727949,
+        "recall_serviceable": 0.8355437665782494
+      },
+      {
+        "threshold": 0.38,
+        "balanced_accuracy": 0.9044839143413661,
+        "recall_worn": 0.9681190223166843,
+        "recall_serviceable": 0.8408488063660478
+      },
+      {
+        "threshold": 0.39,
+        "balanced_accuracy": 0.9036847757760946,
+        "recall_worn": 0.9638682252922423,
+        "recall_serviceable": 0.843501326259947
+      },
+      {
+        "threshold": 0.4,
+        "balanced_accuracy": 0.9030174175562427,
+        "recall_worn": 0.9585547290116897,
+        "recall_serviceable": 0.8474801061007957
+      },
+      {
+        "threshold": 0.41,
+        "balanced_accuracy": 0.9035445389379209,
+        "recall_worn": 0.9543039319872476,
+        "recall_serviceable": 0.8527851458885941
+      },
+      {
+        "threshold": 0.42,
+        "balanced_accuracy": 0.9065923998680787,
+        "recall_worn": 0.9511158342189161,
+        "recall_serviceable": 0.8620689655172413
+      },
+      {
+        "threshold": 0.43,
+        "balanced_accuracy": 0.9063246109308625,
+        "recall_worn": 0.9479277364505845,
+        "recall_serviceable": 0.8647214854111406
+      },
+      {
+        "threshold": 0.44,
+        "balanced_accuracy": 0.9087093418875456,
+        "recall_worn": 0.944739638682253,
+        "recall_serviceable": 0.8726790450928382
+      },
+      {
+        "threshold": 0.45,
+        "balanced_accuracy": 0.9128199020738139,
+        "recall_worn": 0.9436769394261424,
+        "recall_serviceable": 0.8819628647214854
+      },
+      {
+        "threshold": 0.46,
+        "balanced_accuracy": 0.910958064252432,
+        "recall_worn": 0.9373007438894793,
+        "recall_serviceable": 0.8846153846153846
+      },
+      {
+        "threshold": 0.47,
+        "balanced_accuracy": 0.9108220556606352,
+        "recall_worn": 0.9330499468650372,
+        "recall_serviceable": 0.8885941644562334
+      },
+      {
+        "threshold": 0.48,
+        "balanced_accuracy": 0.914800835501484,
+        "recall_worn": 0.9330499468650372,
+        "recall_serviceable": 0.896551724137931
+      },
+      {
+        "threshold": 0.49,
+        "balanced_accuracy": 0.9161270954484337,
+        "recall_worn": 0.9330499468650372,
+        "recall_serviceable": 0.8992042440318302
+      },
+      {
+        "threshold": 0.5,
+        "balanced_accuracy": 0.9146648269096875,
+        "recall_worn": 0.9287991498405951,
+        "recall_serviceable": 0.9005305039787799
+      },
+      {
+        "threshold": 0.51,
+        "balanced_accuracy": 0.9162546475474762,
+        "recall_worn": 0.926673751328374,
+        "recall_serviceable": 0.9058355437665783
+      },
+      {
+        "threshold": 0.52,
+        "balanced_accuracy": 0.9142610293806747,
+        "recall_worn": 0.9213602550478215,
+        "recall_serviceable": 0.9071618037135278
+      },
+      {
+        "threshold": 0.53,
+        "balanced_accuracy": 0.914125020788878,
+        "recall_worn": 0.9171094580233794,
+        "recall_serviceable": 0.9111405835543767
+      },
+      {
+        "threshold": 0.54,
+        "balanced_accuracy": 0.9162461910547219,
+        "recall_worn": 0.9160467587672688,
+        "recall_serviceable": 0.916445623342175
+      },
+      {
+        "threshold": 0.55,
+        "balanced_accuracy": 0.9131898736318099,
+        "recall_worn": 0.9086078639744952,
+        "recall_serviceable": 0.9177718832891246
+      },
+      {
+        "threshold": 0.56,
+        "balanced_accuracy": 0.914380124986963,
+        "recall_worn": 0.9043570669500531,
+        "recall_serviceable": 0.9244031830238727
+      },
+      {
+        "threshold": 0.57,
+        "balanced_accuracy": 0.9147754660232216,
+        "recall_worn": 0.9011689691817216,
+        "recall_serviceable": 0.9283819628647215
+      },
+      {
+        "threshold": 0.58,
+        "balanced_accuracy": 0.9155703763421159,
+        "recall_worn": 0.900106269925611,
+        "recall_serviceable": 0.9310344827586207
+      },
+      {
+        "threshold": 0.59,
+        "balanced_accuracy": 0.9135767581753145,
+        "recall_worn": 0.8947927736450585,
+        "recall_serviceable": 0.9323607427055703
+      },
+      {
+        "threshold": 0.6,
+        "balanced_accuracy": 0.9109200100350381,
+        "recall_worn": 0.8894792773645058,
+        "recall_serviceable": 0.9323607427055703
+      },
+      {
+        "threshold": 0.61,
+        "balanced_accuracy": 0.9077319122667065,
+        "recall_worn": 0.8831030818278427,
+        "recall_serviceable": 0.9323607427055703
+      },
+      {
+        "threshold": 0.62,
+        "balanced_accuracy": 0.9065332044187993,
+        "recall_worn": 0.8767268862911796,
+        "recall_serviceable": 0.9363395225464191
+      },
+      {
+        "threshold": 0.63,
+        "balanced_accuracy": 0.9052027162254727,
+        "recall_worn": 0.871413390010627,
+        "recall_serviceable": 0.9389920424403183
+      },
+      {
+        "threshold": 0.64,
+        "balanced_accuracy": 0.9037404476867263,
+        "recall_worn": 0.8671625929861849,
+        "recall_serviceable": 0.9403183023872679
+      },
+      {
+        "threshold": 0.65,
+        "balanced_accuracy": 0.9024099594933996,
+        "recall_worn": 0.8618490967056323,
+        "recall_serviceable": 0.9429708222811671
+      },
+      {
+        "threshold": 0.66,
+        "balanced_accuracy": 0.8997532113531235,
+        "recall_worn": 0.8565356004250797,
+        "recall_serviceable": 0.9429708222811671
+      },
+      {
+        "threshold": 0.67,
+        "balanced_accuracy": 0.8970964632128471,
+        "recall_worn": 0.8512221041445271,
+        "recall_serviceable": 0.9429708222811671
+      },
+      {
+        "threshold": 0.68,
+        "balanced_accuracy": 0.8961613160557791,
+        "recall_worn": 0.842720510095643,
+        "recall_serviceable": 0.9496021220159151
+      },
+      {
+        "threshold": 0.69,
+        "balanced_accuracy": 0.8904482504925907,
+        "recall_worn": 0.8299681190223167,
+        "recall_serviceable": 0.9509283819628647
+      },
+      {
+        "threshold": 0.7,
+        "balanced_accuracy": 0.8897766640263617,
+        "recall_worn": 0.8193411264612115,
+        "recall_serviceable": 0.9602122015915119
+      },
+      {
+        "threshold": 0.71,
+        "balanced_accuracy": 0.8868521269488692,
+        "recall_worn": 0.8108395324123273,
+        "recall_serviceable": 0.9628647214854111
+      },
+      {
+        "threshold": 0.72,
+        "balanced_accuracy": 0.8826013299244271,
+        "recall_worn": 0.8023379383634431,
+        "recall_serviceable": 0.9628647214854111
+      },
+      {
+        "threshold": 0.73,
+        "balanced_accuracy": 0.8791454432188794,
+        "recall_worn": 0.7927736450584485,
+        "recall_serviceable": 0.9655172413793104
+      },
+      {
+        "threshold": 0.74,
+        "balanced_accuracy": 0.8755577761679121,
+        "recall_worn": 0.7842720510095643,
+        "recall_serviceable": 0.96684350132626
+      },
+      {
+        "threshold": 0.75,
+        "balanced_accuracy": 0.8719701091169448,
+        "recall_worn": 0.7757704569606801,
+        "recall_serviceable": 0.9681697612732095
+      },
+      {
+        "threshold": 0.76,
+        "balanced_accuracy": 0.8641316450415355,
+        "recall_worn": 0.7587672688629118,
+        "recall_serviceable": 0.9694960212201591
+      },
+      {
+        "threshold": 0.77,
+        "balanced_accuracy": 0.8584185794783472,
+        "recall_worn": 0.7460148777895855,
+        "recall_serviceable": 0.9708222811671088
+      },
+      {
+        "threshold": 0.78,
+        "balanced_accuracy": 0.8577512212584952,
+        "recall_worn": 0.740701381509033,
+        "recall_serviceable": 0.9748010610079576
+      },
+      {
+        "threshold": 0.79,
+        "balanced_accuracy": 0.854163554207528,
+        "recall_worn": 0.7321997874601488,
+        "recall_serviceable": 0.9761273209549072
+      },
+      {
+        "threshold": 0.8,
+        "balanced_accuracy": 0.850176317873925,
+        "recall_worn": 0.7215727948990436,
+        "recall_serviceable": 0.9787798408488063
+      },
+      {
+        "threshold": 0.81,
+        "balanced_accuracy": 0.844994601938792,
+        "recall_worn": 0.7098831030818279,
+        "recall_serviceable": 0.980106100795756
+      },
+      {
+        "threshold": 0.82,
+        "balanced_accuracy": 0.8396811056582394,
+        "recall_worn": 0.6992561105207227,
+        "recall_serviceable": 0.980106100795756
+      },
+      {
+        "threshold": 0.83,
+        "balanced_accuracy": 0.8325057715563047,
+        "recall_worn": 0.6822529224229543,
+        "recall_serviceable": 0.9827586206896551
+      },
+      {
+        "threshold": 0.84,
+        "balanced_accuracy": 0.8258617870824254,
+        "recall_worn": 0.6663124335812965,
+        "recall_serviceable": 0.9854111405835544
+      },
+      {
+        "threshold": 0.85,
+        "balanced_accuracy": 0.816828843405486,
+        "recall_worn": 0.6482465462274176,
+        "recall_serviceable": 0.9854111405835544
+      },
+      {
+        "threshold": 0.86,
+        "balanced_accuracy": 0.8077916714821695,
+        "recall_worn": 0.6248671625929861,
+        "recall_serviceable": 0.9907161803713528
+      },
+      {
+        "threshold": 0.87,
+        "balanced_accuracy": 0.8023421666098203,
+        "recall_worn": 0.6099893730074389,
+        "recall_serviceable": 0.9946949602122016
+      },
+      {
+        "threshold": 0.88,
+        "balanced_accuracy": 0.7927778733048256,
+        "recall_worn": 0.5908607863974495,
+        "recall_serviceable": 0.9946949602122016
+      },
+      {
+        "threshold": 0.89,
+        "balanced_accuracy": 0.78347714069067,
+        "recall_worn": 0.5696068012752391,
+        "recall_serviceable": 0.9973474801061007
+      },
+      {
+        "threshold": 0.9,
+        "balanced_accuracy": 0.7756386766152605,
+        "recall_worn": 0.5526036131774708,
+        "recall_serviceable": 0.9986737400530504
+      }
+    ]
+  },
+  "interpretation": "",
+  "decision": "",
+  "seed": 42,
+  "config": {
+    "features": [
+      "spectral_slope",
+      "spectral_slope_r2",
+      "orientation_anisotropy",
+      "orientation_coherence",
+      "orientation_entropy",
+      "glcm_contrast_d1",
+      "glcm_contrast_d2",
+      "glcm_contrast_d4",
+      "glcm_contrast_anisotropy",
+      "glcm_dissimilarity_d1",
+      "glcm_dissimilarity_d2",
+      "glcm_dissimilarity_d4",
+      "glcm_dissimilarity_anisotropy",
+      "glcm_homogeneity_d1",
+      "glcm_homogeneity_d2",
+      "glcm_homogeneity_d4",
+      "glcm_homogeneity_anisotropy",
+      "glcm_energy_d1",
+      "glcm_energy_d2",
+      "glcm_energy_d4",
+      "glcm_energy_anisotropy",
+      "glcm_correlation_d1",
+      "glcm_correlation_d2",
+      "glcm_correlation_d4",
+      "glcm_correlation_anisotropy",
+      "lbp_0",
+      "lbp_1",
+      "lbp_2",
+      "lbp_3",
+      "lbp_4",
+      "lbp_5",
+      "lbp_6",
+      "lbp_7",
+      "lbp_8",
+      "lbp_9",
+      "lbp_10",
+      "lbp_11",
+      "lbp_12",
+      "lbp_13",
+      "lbp_14",
+      "lbp_15",
+      "lbp_16",
+      "lbp_17",
+      "edge_density",
+      "gradient_mean",
+      "gradient_p95"
+    ],
+    "target_recall_worn": 0.8,
+    "group_aware": true
+  },
+  "timestamp": "2026-09-12T22:11:34+00:00",
+  "git_commit": "d839469",
+  "git_dirty": true,
+  "python": "3.12.12"
+}

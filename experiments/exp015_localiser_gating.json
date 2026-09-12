@@ -1,0 +1,109 @@
+{
+  "experiment_id": "exp015_localiser_gating",
+  "title": "Can texture localisation be adopted without harming well-framed photos?",
+  "hypothesis": "A texture-energy localiser repairs wide shots but damages close-ups. If its own confidence separates the two framings, it can gate itself and capture the benefit without the cost. If no threshold achieves that, localisation should not be adopted and the correct response to a wide shot is to ask for a closer photograph.",
+  "dataset": "37 Mendeley images, each evaluated twice: as the original close-up and composited into a constant-size frame with the tyre shrunk 2.5x. The close-up probability is the reference for both.",
+  "method": "texture_energy (the exp014 winner) applied conditionally on its own confidence, falling back to the production centre band below the threshold.",
+  "validation": "Within-subject across both framings, identical images at every threshold. A threshold is viable only if it cuts the wide-shot flip rate by more than 5 points while leaving the close-up flip rate no more than 2 points worse than doing nothing.",
+  "metrics": {
+    "n_images": 37,
+    "confidence_separability_auc": 0.9273192111029949,
+    "close_confidence_median": 0.6054884517851724,
+    "wide_confidence_median": 1.0,
+    "by_threshold": {
+      "0.02": {
+        "close": {
+          "drift": 0.19098904565615313,
+          "flip_rate": 0.25,
+          "unassessable": 9
+        },
+        "wide": {
+          "drift": 0.1062949066859006,
+          "flip_rate": 0.12121212121212122,
+          "unassessable": 4
+        }
+      },
+      "0.05": {
+        "close": {
+          "drift": 0.19082069406526497,
+          "flip_rate": 0.25,
+          "unassessable": 9
+        },
+        "wide": {
+          "drift": 0.1062949066859006,
+          "flip_rate": 0.12121212121212122,
+          "unassessable": 4
+        }
+      },
+      "0.10": {
+        "close": {
+          "drift": 0.1905424581611008,
+          "flip_rate": 0.25,
+          "unassessable": 9
+        },
+        "wide": {
+          "drift": 0.1062949066859006,
+          "flip_rate": 0.12121212121212122,
+          "unassessable": 4
+        }
+      },
+      "0.20": {
+        "close": {
+          "drift": 0.19104912793599652,
+          "flip_rate": 0.25,
+          "unassessable": 9
+        },
+        "wide": {
+          "drift": 0.1062949066859006,
+          "flip_rate": 0.12121212121212122,
+          "unassessable": 4
+        }
+      },
+      "0.35": {
+        "close": {
+          "drift": 0.1681318363878394,
+          "flip_rate": 0.25,
+          "unassessable": 9
+        },
+        "wide": {
+          "drift": 0.1062949066859006,
+          "flip_rate": 0.12121212121212122,
+          "unassessable": 4
+        }
+      },
+      "1.01": {
+        "close": {
+          "drift": 0.07424761489519136,
+          "flip_rate": 0.11764705882352941,
+          "unassessable": 3
+        },
+        "wide": {
+          "drift": 0.3506270085244677,
+          "flip_rate": 0.5454545454545454,
+          "unassessable": 4
+        }
+      }
+    },
+    "viable_thresholds": []
+  },
+  "tables": {},
+  "interpretation": "No viable threshold exists. The trade is real and it does not go away. Never cropping gives 11.8% verdict flips on close-ups and 54.5% on wide shots; always cropping reverses it almost exactly, to 25.0% and 12.1%. Every threshold between 0.02 and 0.35 behaves identically to always cropping, and nothing in between helps. The reason is instructive, and it is not that the confidence signal is weak. Separability is high - AUC 0.927 - but the statistic *saturates*: wide shots sit at 1.000 with a 10th percentile of 1.000, while close-ups have a median of 0.605 and a 90th percentile of also 1.000. The two distributions are well separated in rank and overlap completely at the ceiling, so there is no operating point that admits wide shots without admitting most close-ups too. A high AUC does not imply a usable threshold when the score is bounded and both classes pile up against the bound. Adopting the localiser would therefore more than double the flip rate for users who framed their photograph correctly - the majority - in order to help those who did not.",
+  "decision": "Do not adopt texture localisation as a localiser. The measured cost to the common case exceeds the benefit to the uncommon one, and the confidence signal cannot separate them at a usable operating point. The useful finding is what the same signal is good *for*. Detecting that the tyre occupies little of the frame is a far easier problem than localising it precisely, and AUC 0.927 says that detection is reliable. So the texture statistic should become a **quality-gate check** - 'the tyre does not fill enough of this photograph, move closer' - rather than a crop. That is option D: abstain and ask for a better photograph, using the localisation work as the detector that makes the abstention possible. exp016 measures that check directly before anything ships.",
+  "seed": 31,
+  "config": {
+    "localiser": "texture_energy",
+    "thresholds": [
+      0.02,
+      0.05,
+      0.1,
+      0.2,
+      0.35,
+      1.01
+    ],
+    "zoom_out": 2.5
+  },
+  "timestamp": "2026-09-12T21:43:40+00:00",
+  "git_commit": "d839469",
+  "git_dirty": true,
+  "python": "3.12.12"
+}

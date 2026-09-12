@@ -1,0 +1,64 @@
+{
+  "experiment_id": "exp013_roi_diagnosis",
+  "title": "Is the wide-shot failure localisation, or lost information?",
+  "hypothesis": "A photograph of a whole wheel degrades the assessment. If the cause is ROI localisation, cropping back to the known tyre rectangle should restore the close-up behaviour. If the cause is lost resolution or domain shift, an oracle crop will not help and no detector would either.",
+  "dataset": "40 Mendeley images that the pipeline handles as close-ups, each composited into a 2.5x larger synthetic background so the tyre occupies roughly a sixth of the frame. The true tyre rectangle is known by construction, so perfect localisation needs no annotation.",
+  "method": "Three conditions per image: the original close photograph; the wide composite through the production pipeline; and the wide composite cropped by an oracle back to the true tyre rectangle. Compares quality-gate outcome, ROI intersection-over-union with the true box, calibrated probability, and per-feature drift in units of the close-up standard deviation.",
+  "validation": "Within-subject: every comparison is between conditions derived from the same photograph, so resolution and content are the only variables. The oracle condition is an upper bound on what any localiser could achieve.",
+  "metrics": {
+    "n_images": 40,
+    "zoom_out_factor": 2.5,
+    "accept_rate": {
+      "close": 0.9,
+      "wide": 0.725,
+      "oracle": 0.825
+    },
+    "roi_iou_wide": {
+      "median": 0.26666666666666666,
+      "mean": 0.41198014531068594,
+      "max": 0.9959849357278471
+    },
+    "roi_method_wide": {
+      "centre_band": 32,
+      "contour": 8
+    },
+    "verdict_agreement_with_close": {
+      "wide": 0.6363636363636364,
+      "oracle": 1.0
+    },
+    "feature_drift_sd": {
+      "edge_density": {
+        "wide_shift_sd": -0.680550947963061,
+        "oracle_shift_sd": -0.2890921448282085
+      },
+      "gradient_mean": {
+        "wide_shift_sd": -1.073813967480743,
+        "oracle_shift_sd": -0.3870703431881677
+      },
+      "orientation_anisotropy": {
+        "wide_shift_sd": 0.2824818784052575,
+        "oracle_shift_sd": 0.10412159726911863
+      },
+      "glcm_contrast_d1": {
+        "wide_shift_sd": -0.958178610115379,
+        "oracle_shift_sd": -0.5553716316766086
+      },
+      "spectral_slope": {
+        "wide_shift_sd": 0.6193069695482417,
+        "oracle_shift_sd": 0.4271124322796537
+      }
+    }
+  },
+  "tables": {},
+  "interpretation": "The failure is dominantly localisation, not lost information. Standing back drives the calibrated probability 0.282 away from the close-up value and drops verdict agreement to 63.6%. Cropping back to the known tyre rectangle - at the reduced resolution that standing back imposes, not the original pixels - restores agreement to 100% and leaves a residual of only 0.055. Perfect localisation therefore recovers about 80% of the damage, and the remaining 20% is the genuine resolution penalty that no detector could undo. The mechanism is visible in the ROI itself: median intersection-over-union between the pipeline's region and the true tyre box is 0.267, and 32 of 40 wide shots fall back to the centre band because no contour passes the acceptance test. The features move accordingly - gradient_mean by -1.07 standard deviations and glcm_contrast_d1 by -0.96 - and both roughly halve under the oracle crop, which is what dilution by background predicts. The quality gate is not a sufficient backstop here: it still accepts 72.5% of wide shots, because a wide shot is sharp, well exposed and high-resolution. It fails none of the checks the gate performs. The other four candidate causes are ruled out. Domain shift and model behaviour cannot explain a failure that an oracle crop repairs completely. Feature extraction is working as specified - the descriptors faithfully describe the region they are given, which is the problem, because that region is mostly not tyre.",
+  "decision": "Localisation is worth improving, and the improvement has a measurable ceiling: recovering at most the 0.226 of probability drift that the oracle recovers. That is a real target rather than a guess. Two things follow. First, candidate localisers can be ranked on this synthetic set, where ground truth is exact, before anything is built into the product (exp014). Second, whatever the outcome, the quality gate needs a check for how much of the frame is actually tyre - the current gate is blind to a technically excellent photograph of mostly ground. Note the limit of this evidence: composites have a hard rectangular boundary and a uniform synthetic surround, which is easier than a real wheel arch. Ranking here must be confirmed on real photographs before adoption.",
+  "seed": 17,
+  "config": {
+    "n_images": 40,
+    "zoom_out": 2.5
+  },
+  "timestamp": "2026-09-12T19:20:35+00:00",
+  "git_commit": "d839469",
+  "git_dirty": true,
+  "python": "3.12.12"
+}

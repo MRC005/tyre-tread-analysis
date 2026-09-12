@@ -1,0 +1,430 @@
+{
+  "experiment_id": "exp001_resolution_confound",
+  "title": "TSCI responds to source resolution, not tread wear",
+  "hypothesis": "If TSCI measures groove sharpness as documented, then downsampling a photograph without changing the tyre should leave TSCI roughly unchanged. If instead TSCI reflects how much the image was rescaled, it will move systematically with source resolution.",
+  "dataset": "Legacy scraped dataset, the 38 images with native width >= 1024 px, each anti-alias downsampled to widths [128, 192, 256, 384, 512, 768, 1024]. Within a family only the resolution differs.",
+  "method": "The original published pipeline, called through src/stage2_roi.py and src/stage3_tsci.py unmodified: BGR -> grey -> CLAHE(2.0, 8x8) -> Gaussian(5x5) -> centre-band ROI -> resize to 256x128 -> 2-D DFT -> E(r > 0.2*min_dim) / E_total.",
+  "validation": "Within-subject intervention. No model and no cross-validation: the comparison is between versions of the same photograph, so resolution is the only free variable.",
+  "metrics": {
+    "n_images": 38,
+    "sweep_widths": [
+      128,
+      192,
+      256,
+      384,
+      512,
+      768,
+      1024
+    ],
+    "mean_tsci_by_width": {
+      "128": 0.3341336994117273,
+      "192": 0.343035911647764,
+      "256": 0.38884503674764626,
+      "384": 0.46180312628856923,
+      "512": 0.5189207759010322,
+      "768": 0.5754955823903027,
+      "1024": 0.5998010396104361
+    },
+    "resolution_artefact": 0.26566734019870875,
+    "class_signal_in_dataset": 0.07378860398860404,
+    "artefact_to_signal_ratio": 3.6003844203332345,
+    "per_image_relative_change": {
+      "data/good/11_32-new-tire-tread.jpg": 0.8335449767130316,
+      "data/good/BCT_tire-tread-blog-scaled.jpg": 1.0266163677194382,
+      "data/good/How-to-Check-Your-Cars-Tire-Tread-Step-by-Step.jpg": 0.8054617606212906,
+      "data/good/Tire_tread.jpg": 0.7929183506530412,
+      "data/good/TrailerTires_header_image_3.jpg": 0.6873461561656151,
+      "data/good/Untitled-design-6-e1689318755768.jpg": 0.3453062255137633,
+      "data/good/checking-tire-tread-with-ruler_18977381.jpg": 0.20569858137482203,
+      "data/good/ghows-LK-6ba044f3-dfb4-200b-e053-0100007f6ed2-bc18eb14.jpeg": 0.9403500671563554,
+      "data/good/how-to-check-your-ti-hero.jpg": 0.44997317599005815,
+      "data/good/maxresdefault.jpg": 0.7084143668900745,
+      "data/good/maxresdefault3.jpg": 0.8117803639145149,
+      "data/good/tire-tread-wear-caus-hero.jpg": 0.865678090217799,
+      "data/bad/0kTHWraMPulZfu5p3.jpeg": 0.9520528089102446,
+      "data/bad/3w2x8lzc7dc21.jpg": 0.894275049646512,
+      "data/bad/4331fb6a03281e84b3d56a3c7ce1330319be5600.jpeg": 0.9805749570668967,
+      "data/bad/9pd1vft7zwd11.jpg": 1.0120858381216353,
+      "data/bad/AdobeStock_150196880.jpeg": 1.0001507889578036,
+      "data/bad/AdobeStock_227945483-1024x1024.jpeg": 0.8072371318113628,
+      "data/bad/Bald20Tire20Graham20Auto20Repair.jpg": 0.984481236956374,
+      "data/bad/Checking-Tire-Tread-with-Penny-11416489_xl-2015.jpg": 0.36315583508822546,
+      "data/bad/Rear-Tires-are-Bald-1.jpg": 0.6485305492720903,
+      "data/bad/Treading-too-lightly-OPP-charge-driver-for-dangerously-bald-tires.jpg": 0.8140114367051017,
+      "data/bad/Why-Is-it-Unsafe-to-Drive-on-Bald-Tires_-01-1024x649.png": 0.633963307101889,
+      "data/bad/afaf5be5938ca88bd0691bb68a6b91e19992e94c.jpeg": 0.6344427815019309,
+      "data/bad/bald-tire-3.png": 0.715187740136926,
+      "data/bad/bald-tire-not-safe-for-road.jpg": 0.5477322435529329,
+      "data/bad/bald-tire2.jpg": 1.182726285844279,
+      "data/bad/bald-tires-hero.jpg": 0.5279965938144294,
+      "data/bad/bald-tires-suck.jpg": 0.7175155230346504,
+      "data/bad/bald-tires.jpg": 0.9060344372486473,
+      "data/bad/baldtyre.jpg": 1.15914970108285,
+      "data/bad/cl1yt9ksg2ea1.jpg": 0.9751576658580274,
+      "data/bad/close-up-of-an-old-worn-out-and-almost-bald-tyre-2GDFYCA.jpg": 0.7644515378589319,
+      "data/bad/ghows-LK-6ba044f3-dfb4-200b-e053-0100007f6ed2-bc18eb14.jpeg": 0.9403500671563554,
+      "data/bad/iStock-950135282.jpg": 1.3444399118726833,
+      "data/bad/maxresdefault3.jpg": 0.7433843072701586,
+      "data/bad/stock-photo-bald-tyre-with-no-tread-left-1415399372.jpg": 0.9837847297682781,
+      "data/bad/very-bald-tyretire-from-vintage-car-tread-is-nearly-worn-off-mot-test-EXKB1J.jpg": 0.7480588382936857
+    },
+    "correlation_tsci_vs_native_width_full_dataset": 0.681
+  },
+  "tables": {
+    "per_image": {
+      "data/good/11_32-new-tire-tread.jpg": {
+        "128": 0.33312236563110104,
+        "192": 0.34013631458136306,
+        "256": 0.3940190016917849,
+        "384": 0.4716654642762877,
+        "512": 0.50562015176334,
+        "768": 0.5727123722262357,
+        "1024": 0.6107948401336671
+      },
+      "data/good/BCT_tire-tread-blog-scaled.jpg": {
+        "128": 0.3291982072899049,
+        "192": 0.3781177461958808,
+        "256": 0.4344090388988545,
+        "384": 0.5182471219048824,
+        "512": 0.5711216262203799,
+        "768": 0.632791398009363,
+        "1024": 0.6671584751176177
+      },
+      "data/good/How-to-Check-Your-Cars-Tire-Tread-Step-by-Step.jpg": {
+        "128": 0.36818676706963516,
+        "192": 0.3754187802329941,
+        "256": 0.4320748072320435,
+        "384": 0.5172699699724015,
+        "512": 0.5807635638759082,
+        "768": 0.6389786892438926,
+        "1024": 0.6647471287110045
+      },
+      "data/good/Tire_tread.jpg": {
+        "128": 0.3533389905453259,
+        "192": 0.3494014145246161,
+        "256": 0.3955547922112063,
+        "384": 0.4747596049175658,
+        "512": 0.537226777857507,
+        "768": 0.6042515338911095,
+        "1024": 0.6335079601499363
+      },
+      "data/good/TrailerTires_header_image_3.jpg": {
+        "128": 0.3454856369405323,
+        "192": 0.3357650618736448,
+        "256": 0.3842273849367261,
+        "384": 0.45579116740490755,
+        "512": 0.5094428382408864,
+        "768": 0.5603185311210546,
+        "1024": 0.5829538615020364
+      },
+      "data/good/Untitled-design-6-e1689318755768.jpg": {
+        "128": 0.2842119456188928,
+        "192": 0.29294032115743784,
+        "256": 0.32816873200803987,
+        "384": 0.3928688678248501,
+        "512": 0.44191279155217833,
+        "768": 0.342967922346357,
+        "1024": 0.3823520998064756
+      },
+      "data/good/checking-tire-tread-with-ruler_18977381.jpg": {
+        "128": 0.318638862598119,
+        "192": 0.2916828452948323,
+        "256": 0.3057177757216475,
+        "384": 0.33118010338044385,
+        "512": 0.30840198436319904,
+        "768": 0.3629561182529768,
+        "1024": 0.38418242460543894
+      },
+      "data/good/ghows-LK-6ba044f3-dfb4-200b-e053-0100007f6ed2-bc18eb14.jpeg": {
+        "128": 0.2760111445897785,
+        "192": 0.2933935066689905,
+        "256": 0.3335563253188625,
+        "384": 0.4322147559822798,
+        "512": 0.5127782701976543,
+        "768": 0.5943125188990254,
+        "1024": 0.5355582429406792
+      },
+      "data/good/how-to-check-your-ti-hero.jpg": {
+        "128": 0.3249534691842589,
+        "192": 0.32176617559626886,
+        "256": 0.34304798367288725,
+        "384": 0.3846863063240737,
+        "512": 0.4348619603460403,
+        "768": 0.4452726498292889,
+        "1024": 0.47117381376208733
+      },
+      "data/good/maxresdefault.jpg": {
+        "128": 0.3570388482402496,
+        "192": 0.34620634779988635,
+        "256": 0.39832675172281273,
+        "384": 0.4713383071623566,
+        "512": 0.5281055339470525,
+        "768": 0.5847229007537085,
+        "1024": 0.6099702978715275
+      },
+      "data/good/maxresdefault3.jpg": {
+        "128": 0.3232819231854567,
+        "192": 0.31072527449624365,
+        "256": 0.3472755693506227,
+        "384": 0.41932457446707905,
+        "512": 0.48496454356641855,
+        "768": 0.5521504256069052,
+        "1024": 0.585715840435931
+      },
+      "data/good/tire-tread-wear-caus-hero.jpg": {
+        "128": 0.30573618587750484,
+        "192": 0.31379040179242945,
+        "256": 0.3548905906028507,
+        "384": 0.3638967755706538,
+        "512": 0.40980329543622784,
+        "768": 0.5409982492783898,
+        "1024": 0.5704053033784172
+      },
+      "data/bad/0kTHWraMPulZfu5p3.jpeg": {
+        "128": 0.3171543288785285,
+        "192": 0.338594416888183,
+        "256": 0.38612334441639945,
+        "384": 0.47380052375760706,
+        "512": 0.5324759775839903,
+        "768": 0.5932679482741294,
+        "1024": 0.6191019985453751
+      },
+      "data/bad/3w2x8lzc7dc21.jpg": {
+        "128": 0.2701786510946942,
+        "192": 0.30594802343020105,
+        "256": 0.3526870536104598,
+        "384": 0.41902869358476325,
+        "512": 0.46080097750163057,
+        "768": 0.4967087318549433,
+        "1024": 0.5117926777158295
+      },
+      "data/bad/4331fb6a03281e84b3d56a3c7ce1330319be5600.jpeg": {
+        "128": 0.3241755174178021,
+        "192": 0.37084474991703453,
+        "256": 0.4436355603255049,
+        "384": 0.5321730880120197,
+        "512": 0.5833347311302595,
+        "768": 0.6255364799389439,
+        "1024": 0.6420539114919024
+      },
+      "data/bad/9pd1vft7zwd11.jpg": {
+        "128": 0.3140414714366913,
+        "192": 0.356271438222463,
+        "256": 0.42668941041585906,
+        "384": 0.5158399151314241,
+        "512": 0.5717165365411015,
+        "768": 0.614892611724162,
+        "1024": 0.6318783972606467
+      },
+      "data/bad/AdobeStock_150196880.jpeg": {
+        "128": 0.32788687114416865,
+        "192": 0.3631879545033284,
+        "256": 0.4214181055150558,
+        "384": 0.5060991677130448,
+        "512": 0.5708058069083883,
+        "768": 0.6315014147635213,
+        "1024": 0.6558231840079146
+      },
+      "data/bad/AdobeStock_227945483-1024x1024.jpeg": {
+        "128": 0.3497568290447491,
+        "192": 0.3712119968432562,
+        "256": 0.42778548498893004,
+        "384": 0.5068274000797833,
+        "512": 0.5643607386315678,
+        "768": 0.6108942726761205,
+        "1024": 0.6320935285542695
+      },
+      "data/bad/Bald20Tire20Graham20Auto20Repair.jpg": {
+        "128": 0.2855949581520288,
+        "192": 0.3024937478938858,
+        "256": 0.3384650937611944,
+        "384": 0.4151419941836027,
+        "512": 0.4546111137167455,
+        "768": 0.5287405142885643,
+        "1024": 0.566757835822042
+      },
+      "data/bad/Checking-Tire-Tread-with-Penny-11416489_xl-2015.jpg": {
+        "128": 0.3270673270912438,
+        "192": 0.2938063196622072,
+        "256": 0.2907269501460428,
+        "384": 0.3045499291805276,
+        "512": 0.3423735021081997,
+        "768": 0.40038803061771083,
+        "1024": 0.44584373539113825
+      },
+      "data/bad/Rear-Tires-are-Bald-1.jpg": {
+        "128": 0.36312597728563006,
+        "192": 0.3438478955006155,
+        "256": 0.38279837029856495,
+        "384": 0.4522676302934759,
+        "512": 0.5121021366920786,
+        "768": 0.5686752531843624,
+        "1024": 0.5986242667896443
+      },
+      "data/bad/Treading-too-lightly-OPP-charge-driver-for-dangerously-bald-tires.jpg": {
+        "128": 0.32144674914133303,
+        "192": 0.3131345449925246,
+        "256": 0.3593404907413254,
+        "384": 0.43493786181879596,
+        "512": 0.4959528706834486,
+        "768": 0.5565060228576533,
+        "1024": 0.5831080792340539
+      },
+      "data/bad/Why-Is-it-Unsafe-to-Drive-on-Bald-Tires_-01-1024x649.png": {
+        "128": 0.39021752591345193,
+        "192": 0.3745202506963775,
+        "256": 0.35911140454521256,
+        "384": 0.4713039093715854,
+        "512": 0.5340237180685447,
+        "768": 0.6020341636828825,
+        "1024": 0.637601119130661
+      },
+      "data/bad/afaf5be5938ca88bd0691bb68a6b91e19992e94c.jpeg": {
+        "128": 0.3995974250562812,
+        "192": 0.4218386173944398,
+        "256": 0.47206268379186866,
+        "384": 0.5459471535380774,
+        "512": 0.5944869321625808,
+        "768": 0.6362287818520219,
+        "1024": 0.6531191268899976
+      },
+      "data/bad/bald-tire-3.png": {
+        "128": 0.3854849139332019,
+        "192": 0.37909908899496175,
+        "256": 0.4256341074653863,
+        "384": 0.5120629152089823,
+        "512": 0.5887864219967383,
+        "768": 0.6614024129420045,
+        "1024": 0.6611789983859659
+      },
+      "data/bad/bald-tire-not-safe-for-road.jpg": {
+        "128": 0.3373713812551358,
+        "192": 0.3383882774463552,
+        "256": 0.3629751522137643,
+        "384": 0.4113663679967019,
+        "512": 0.45400258285113654,
+        "768": 0.500939434871654,
+        "1024": 0.5221605648205633
+      },
+      "data/bad/bald-tire2.jpg": {
+        "128": 0.28772880428888864,
+        "192": 0.2716354553402602,
+        "256": 0.3538758499405907,
+        "384": 0.3796189540707114,
+        "512": 0.46337761450339937,
+        "768": 0.5689132386434388,
+        "1024": 0.6280332243159014
+      },
+      "data/bad/bald-tires-hero.jpg": {
+        "128": 0.35814495497357973,
+        "192": 0.3482875520577385,
+        "256": 0.38116795939820075,
+        "384": 0.4345532259740876,
+        "512": 0.47925597995209546,
+        "768": 0.5255579053752556,
+        "1024": 0.547244271291452
+      },
+      "data/bad/bald-tires-suck.jpg": {
+        "128": 0.3212142469186384,
+        "192": 0.3152048667067399,
+        "256": 0.35197274242345716,
+        "384": 0.4063779861798686,
+        "512": 0.4634676722192734,
+        "768": 0.5225076637235941,
+        "1024": 0.5516904553026466
+      },
+      "data/bad/bald-tires.jpg": {
+        "128": 0.3396323704576267,
+        "192": 0.33081764901412203,
+        "256": 0.38017972773887937,
+        "384": 0.47011394052946504,
+        "512": 0.5445294332082443,
+        "768": 0.6156352733290876,
+        "1024": 0.6473509940966266
+      },
+      "data/bad/baldtyre.jpg": {
+        "128": 0.3467136090869629,
+        "192": 0.37612199670295476,
+        "256": 0.4623874864788912,
+        "384": 0.5724005692103187,
+        "512": 0.6536514105638048,
+        "768": 0.7208708512145555,
+        "1024": 0.7486065854214721
+      },
+      "data/bad/cl1yt9ksg2ea1.jpg": {
+        "128": 0.35725524917608764,
+        "192": 0.4113610309180208,
+        "256": 0.486435455149393,
+        "384": 0.5849189425493289,
+        "512": 0.642697920227016,
+        "768": 0.6884302706981609,
+        "1024": 0.7056354440781692
+      },
+      "data/bad/close-up-of-an-old-worn-out-and-almost-bald-tyre-2GDFYCA.jpg": {
+        "128": 0.38899416361977873,
+        "192": 0.381659383880931,
+        "256": 0.42552330942054034,
+        "384": 0.5194151659407572,
+        "512": 0.5909633397993949,
+        "768": 0.6587952587093228,
+        "1024": 0.6863613502170676
+      },
+      "data/bad/ghows-LK-6ba044f3-dfb4-200b-e053-0100007f6ed2-bc18eb14.jpeg": {
+        "128": 0.2760111445897785,
+        "192": 0.2933935066689905,
+        "256": 0.3335563253188625,
+        "384": 0.4322147559822798,
+        "512": 0.5127782701976543,
+        "768": 0.5943125188990254,
+        "1024": 0.5355582429406792
+      },
+      "data/bad/iStock-950135282.jpg": {
+        "128": 0.2901190995985278,
+        "192": 0.33331713488075054,
+        "256": 0.39439903917883157,
+        "384": 0.4823901650802282,
+        "512": 0.5577141852952925,
+        "768": 0.6360727645706507,
+        "1024": 0.6801667962953547
+      },
+      "data/bad/maxresdefault3.jpg": {
+        "128": 0.3783690532437308,
+        "192": 0.3881047533132828,
+        "256": 0.4373971350320871,
+        "384": 0.5041158109576036,
+        "512": 0.5668656711829051,
+        "768": 0.6306790739353193,
+        "1024": 0.6596426697817874
+      },
+      "data/bad/stock-photo-bald-tyre-with-no-tread-left-1415399372.jpg": {
+        "128": 0.3514748976725929,
+        "192": 0.4012740172787627,
+        "256": 0.4794034788966755,
+        "384": 0.5761597568505051,
+        "512": 0.6355348213123815,
+        "768": 0.6798271098173837,
+        "1024": 0.6972505348997579
+      },
+      "data/bad/very-bald-tyretire-from-vintage-car-tread-is-nearly-worn-off-mot-test-EXKB1J.jpg": {
+        "128": 0.3691187104037438,
+        "192": 0.3616557832520537,
+        "256": 0.38909092183024263,
+        "384": 0.45164995658230317,
+        "512": 0.5233157818345637,
+        "768": 0.5670808189287327,
+        "1024": 0.6452412241008317
+      }
+    }
+  },
+  "interpretation": "TSCI rises monotonically with source resolution. Across the sweep it moves +0.2657 on tyres that are pixel-for-pixel the same subject, while the entire good-versus-worn difference in the dataset is +0.0738 - an artefact 3.6 times larger than the signal it is supposed to be measuring. The mechanism is in the pipeline: resizing every ROI to a fixed 256x128 upsamples a thumbnail, whose upper octaves are already empty after web-scale JPEG compression, while packing a large photograph's genuine detail into the same grid. The documented direction is also wrong: worn tyres in this dataset have higher TSCI (0.4958) than serviceable ones (0.4220), because worn examples happen to come from slightly larger source images.",
+  "decision": "SUPERSEDED IN PART BY exp004. This experiment's own conclusion was that TSCI should be withdrawn from the production feature set. exp004 re-examined that and found the ratio is not intrinsically invalid: its sensitivity to resolution collapses from 2.5x the class signal to 0.6x once oversampling exceeds about 3x. The defensible statement is therefore narrower than 'TSCI does not work'. It is that TSCI has an unstated precondition - the image must carry genuine detail up to the analysis grid's Nyquist limit - which roughly 78% of the legacy dataset violated, and that its published physical interpretation (decreasing with wear) is contradicted by the data. TSCI therefore remains a candidate feature behind the oversampling floor rather than a discarded one, and earns its place only if the model-comparison experiment shows it contributes. What this experiment does establish unconditionally is that the original pipeline's fixed-size resize was invalid and that the published result was measured through it.",
+  "seed": 42,
+  "config": {
+    "pipeline": "original, unmodified",
+    "analysis_grid": "256x128"
+  },
+  "timestamp": "2026-09-11T11:12:04+00:00",
+  "git_commit": "d839469",
+  "git_dirty": true,
+  "python": "3.12.12"
+}

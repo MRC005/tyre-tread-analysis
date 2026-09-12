@@ -1,0 +1,36 @@
+{
+  "experiment_id": "exp009_tsci_contribution",
+  "title": "TSCI is valid but adds no measurable predictive value",
+  "hypothesis": "Having been rehabilitated in exp004 as valid above the oversampling floor, TSCI should be readmitted to the production feature set only if it measurably improves the model. The null hypothesis is that it adds nothing beyond the scale-invariant spectral descriptors that replaced it.",
+  "dataset": "Mendeley, 1735 images passing the quality gate (957 worn / 778 serviceable). Every image is behind the oversampling floor, so TSCI is evaluated only inside the regime exp004 validated.",
+  "method": "RBF-SVM (C=10) with Platt scaling, the model exp007 selected. The 46-feature production set is compared against the same set plus legacy TSCI, on identical folds. TSCI alone and the scale-invariant spectral descriptors alone are also fitted for context.",
+  "validation": "30 resolution-grouped folds, identical across both arms, compared with a paired t-test. Resolution grouping matters here specifically: TSCI's known failure mode is resolution sensitivity, so a fold scheme that let resolution leak could credit TSCI for the confound it is prone to.",
+  "metrics": {
+    "n": 1735,
+    "n_production_features": 46,
+    "tsci_univariate_auc": 0.6266879413763555,
+    "tsci_mean_worn": 0.6654326642699865,
+    "tsci_mean_serviceable": 0.6234829833391156,
+    "tsci_alone_balanced_accuracy": 0.5079338564003074,
+    "production_balanced_accuracy": 0.8726199620113956,
+    "production_plus_tsci_balanced_accuracy": 0.8731984967287612,
+    "paired_delta": 0.0005785347173653163,
+    "paired_p_value": 0.6020005853635285,
+    "significant": false,
+    "scale_invariant_spectral_only": 0.6691693672911982,
+    "texture_plus_tsci_no_new_spectral": 0.8507717103978857
+  },
+  "tables": {},
+  "interpretation": "TSCI adds nothing, and the way it fails is more informative than the headline. Its univariate AUC of 0.627 looks like a real signal, but as a lone feature under resolution-grouped folds it scores 0.508 against a 0.500 floor - indistinguishable from chance. The univariate figure was measured across the whole dataset, where the acquisition confound identified in exp006 is free to contribute; blocking sessions removes it. That is the same failure mode exp001 found on the legacy dataset, reproduced here on independent data: what looks like tread information turns out to be information about the photograph. Added to the 46-feature production set, TSCI changes balanced accuracy by +0.0006 with a paired p of 0.6020 - no measurable improvement. The scale-invariant spectral descriptors that replaced it reach 0.669 on their own, and swapping them out for TSCI costs the full model 0.851 against 0.873, so the replacement was worth making. One further result deserves recording. Worn tyres average 0.6654 against 0.6235 for serviceable ones - again the opposite of the original paper's claim that TSCI decreases with wear. On the legacy dataset that inversion could be attributed to the resolution confound. Here it is reproduced on an independent dataset, entirely inside the oversampling regime exp004 validated, so that explanation no longer applies. The stated physical justification - that shallower grooves attenuate high-frequency energy - is not supported by either dataset.",
+  "decision": "TSCI is not included in the production classifier. It is retained as a reported diagnostic on the inspection report and as a research feature, where it is genuinely useful: it is cheap, interpretable, and its history in this project is the clearest available illustration of why a feature needs a stated validity regime. Keeping it out of the model while keeping it in the report is the honest resolution - it was never shown to be worthless, only redundant here, and the distinction is recorded rather than flattened. If a future dataset with real tread-depth labels changes that, this experiment is the one to re-run.",
+  "seed": 42,
+  "config": {
+    "model": "svm_rbf_c10",
+    "n_seeds": 6,
+    "validation": "resolution-grouped StratifiedGroupKFold"
+  },
+  "timestamp": "2026-09-11T12:08:28+00:00",
+  "git_commit": "d839469",
+  "git_dirty": true,
+  "python": "3.12.12"
+}

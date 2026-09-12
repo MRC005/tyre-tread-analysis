@@ -1,0 +1,125 @@
+{
+  "experiment_id": "exp008_cross_dataset",
+  "title": "The two datasets do not measure the same thing",
+  "hypothesis": "If the legacy dataset's 'worn' label and the Mendeley dataset's 'defective' label denote the same physical property, a model trained on one should transfer to the other with only a modest drop. If they denote different properties - tread wear versus rubber damage - transfer should collapse towards chance even though each dataset is separately learnable.",
+  "dataset": "Legacy scraped, 82 images passing the quality gate (49 worn). Mendeley, 1735 passing (957 worn). 46 shared features.",
+  "method": "RBF-SVM (C=10) with Platt scaling, the model exp007 selected, fitted on the whole of one dataset and evaluated on the whole of the other. Repeated with a calibrated logistic regression to check the gap is not specific to one model family. Within-dataset reference points use resolution-grouped cross-validation. A pooled model and a domain classifier are fitted as further checks.",
+  "validation": "Transfer is a true held-out evaluation: no image from the test dataset is seen during training. Balanced accuracy with 2000-sample percentile bootstrap 95% confidence intervals, which the small legacy test set makes necessary. Within-dataset baselines use folds grouped by exact pixel resolution, so they are the conservative comparison.",
+  "metrics": {
+    "within_mendeley": {
+      "balanced_accuracy": 0.8779550049755391,
+      "std": 0.032056656558920156,
+      "n": 1735
+    },
+    "within_legacy": {
+      "balanced_accuracy": 0.7692352092352093,
+      "std": 0.108549860039863,
+      "n": 82
+    },
+    "mendeley_to_legacy": {
+      "balanced_accuracy": 0.6645021645021645,
+      "ci_low": 0.5585072738772928,
+      "ci_high": 0.764758459835547,
+      "recall_worn": 0.5714285714285714,
+      "recall_serviceable": 0.7575757575757576,
+      "roc_auc": 0.7090290661719233,
+      "n": 82
+    },
+    "legacy_to_mendeley": {
+      "balanced_accuracy": 0.594795351798277,
+      "ci_low": 0.5721358477255944,
+      "ci_high": 0.6174886853523074,
+      "recall_worn": 0.7178683385579937,
+      "recall_serviceable": 0.4717223650385604,
+      "roc_auc": 0.6427917146825045,
+      "n": 1735
+    },
+    "mendeley_to_legacy_logreg": {
+      "balanced_accuracy": 0.6131725417439704,
+      "ci_low": 0.5172596153846153,
+      "ci_high": 0.7058845203519875,
+      "recall_worn": 0.40816326530612246,
+      "recall_serviceable": 0.8181818181818182,
+      "roc_auc": 0.7269635126777984,
+      "n": 82
+    },
+    "legacy_to_mendeley_logreg": {
+      "balanced_accuracy": 0.573356783865604,
+      "ci_low": 0.5552529868238311,
+      "ci_high": 0.5917807447679135,
+      "recall_worn": 0.8986415882967607,
+      "recall_serviceable": 0.2480719794344473,
+      "roc_auc": 0.6859562740247076,
+      "n": 1735
+    },
+    "pooled": {
+      "balanced_accuracy": 0.8602126651384957,
+      "std": 0.020006557835035618,
+      "n": 1817
+    },
+    "domain_separability": 0.6273558275605652
+  },
+  "tables": {
+    "shared_features": [
+      "spectral_slope",
+      "spectral_slope_r2",
+      "orientation_anisotropy",
+      "orientation_coherence",
+      "orientation_entropy",
+      "glcm_contrast_d1",
+      "glcm_contrast_d2",
+      "glcm_contrast_d4",
+      "glcm_contrast_anisotropy",
+      "glcm_dissimilarity_d1",
+      "glcm_dissimilarity_d2",
+      "glcm_dissimilarity_d4",
+      "glcm_dissimilarity_anisotropy",
+      "glcm_homogeneity_d1",
+      "glcm_homogeneity_d2",
+      "glcm_homogeneity_d4",
+      "glcm_homogeneity_anisotropy",
+      "glcm_energy_d1",
+      "glcm_energy_d2",
+      "glcm_energy_d4",
+      "glcm_energy_anisotropy",
+      "glcm_correlation_d1",
+      "glcm_correlation_d2",
+      "glcm_correlation_d4",
+      "glcm_correlation_anisotropy",
+      "lbp_0",
+      "lbp_1",
+      "lbp_2",
+      "lbp_3",
+      "lbp_4",
+      "lbp_5",
+      "lbp_6",
+      "lbp_7",
+      "lbp_8",
+      "lbp_9",
+      "lbp_10",
+      "lbp_11",
+      "lbp_12",
+      "lbp_13",
+      "lbp_14",
+      "lbp_15",
+      "lbp_16",
+      "lbp_17",
+      "edge_density",
+      "gradient_mean",
+      "gradient_p95"
+    ]
+  },
+  "interpretation": "Transfer degrades sharply in both directions. A model reaching 0.878 balanced accuracy within the Mendeley data scores 0.665 [0.559, 0.765] on the legacy data, and training on legacy gives only 0.595 [0.572, 0.617] on Mendeley against 0.878 within-dataset - a drop of -0.283. Both confidence intervals sit above 0.5, so transfer is weak but not absent: something shared is being learned, just far less than each dataset contains about itself. The calibrated logistic baseline shows the same pattern, so this is a property of the data rather than of one model family. Pooling changes the Mendeley-only result by -0.018 - no gain, while making the training target a blend of two concepts. The domain-separability check is the informative part and it did not go as expected: a classifier distinguishes which dataset an image came from at only 0.627 balanced accuracy. Had that been near 1.0, the transfer failure could be dismissed as ordinary domain shift - the model simply never seeing web thumbnails. It is not. The two image populations are only weakly distinguishable by these texture features, yet a model trained on one is close to useless on the other. That combination points away from appearance and towards the labels: the most consistent explanation is that 'worn tread' and 'defective tyre' name different properties, which is what exp006's visual inspection found directly. Acquisition differences remain a contributing factor and cannot be fully separated out with the data available, but they are no longer the leading explanation.",
+  "decision": "Do not pool the datasets. They are kept separate, with Mendeley as the training set and the legacy data retained only for reproducing the original published result. No combined label is created, because a pooled label would name a concept neither dataset measures. This result is also the project's honest answer on generalisation: the system is validated within the domain it was trained on, and there is direct evidence it does not yet transfer to a different imaging domain. That is a limitation to state plainly in the README, not one to leave for a reader to discover.",
+  "seed": 42,
+  "config": {
+    "model": "svm_rbf_c10",
+    "baseline": "logistic_l2",
+    "n_shared_features": 46,
+    "n_bootstrap": 2000
+  },
+  "timestamp": "2026-09-11T12:06:12+00:00",
+  "git_commit": "d839469",
+  "git_dirty": true,
+  "python": "3.12.12"
+}

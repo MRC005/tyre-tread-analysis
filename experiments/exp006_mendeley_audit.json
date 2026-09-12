@@ -1,0 +1,59 @@
+{
+  "experiment_id": "exp006_mendeley_audit",
+  "title": "The Mendeley dataset is usable, but not for the reason advertised",
+  "hypothesis": "If the Mendeley dataset is what its page describes - 1,854 phone-camera images at a uniform 3000x3000 - then image metadata cannot correlate with the label, the resolution confound found in exp001 becomes impossible, and it is a straightforward replacement for the legacy dataset.",
+  "dataset": "Mendeley doi:10.17632/bn7ch8tvyp.1, all 1856 images as distributed; 1735 pass the quality gate.",
+  "method": "Resolution and file metadata read directly from the images. Confound probes fit a balanced logistic regression on metadata alone, on image features alone, and on both. Label semantics assessed by visual inspection of 40 randomly sampled images, 20 per class.",
+  "validation": "Two cross-validation schemes on identical data: ordinary repeated stratified 5-fold, and 5-fold grouped by exact pixel resolution. An exact sensor resolution fingerprints one camera in one session, so grouping by it prevents a model from recognising the photo session instead of the tyre.",
+  "metrics": {
+    "n_images": 1856,
+    "n_distinct_resolutions": 666,
+    "n_exactly_3000x3000": 0,
+    "n_small_squares": 309,
+    "fraction_small_squares": 0.16648706896551724,
+    "n_resolution_groups_ge15": 6,
+    "n_class_pure_resolution_groups": 4,
+    "quality_gate_pass_rate": 0.9348060344827587,
+    "balanced_accuracy": {
+      "metadata_only_plain": 0.6554280418674946,
+      "metadata_only_resolution_grouped": 0.5336955736158956,
+      "features_only_plain": 0.877410364673327,
+      "features_only_resolution_grouped": 0.8468632352303374,
+      "features_plus_metadata_plain": 0.8885116745482183,
+      "by_family_resolution_grouped": {
+        "trivial appearance (brightness/sharpness)": 0.5401966453295262,
+        "spectral + orientation": 0.6513965506204223,
+        "GLCM": 0.7684738591106784,
+        "LBP": 0.8192327897437477,
+        "edge / gradient": 0.7606979993531021
+      }
+    }
+  },
+  "tables": {
+    "top_resolutions": {
+      "4000x1800": 484,
+      "1800x4000": 339,
+      "4000x3000": 81,
+      "2268x4032": 24,
+      "3000x4000": 23,
+      "4032x2268": 18,
+      "245x245": 6,
+      "239x239": 5,
+      "246x246": 5,
+      "2080x4608": 4,
+      "2394x2394": 4,
+      "393x393": 4
+    }
+  },
+  "interpretation": "Three of the dataset page's claims are wrong, and the most important one is right anyway. There are 666 distinct resolutions, not one, and not a single image is 3000x3000; 309 images (17%) are small squares between 224 and 600 px, which is the signature of web thumbnails rather than phone originals; and the count is 1856, not 1854. There is a real acquisition confound: metadata alone predicts the label at 0.655 balanced accuracy under ordinary folds, four resolution groups are 100% single-class, and the orientation split is stark - 42% of worn images are landscape against 19% of serviceable ones - so the two classes were photographed in separate sessions. Visual inspection answers the question that matters most: the 'defective' class is dominated by sidewall cracking, splits, perished rubber and bead damage, with many images showing the sidewall rather than the tread at all, and several showing deep, healthy tread. The 'good' class is largely new or nearly-new tyres in retail condition. These labels describe tyre damage, not tread depth. Against that, the signal is genuine. Grouping folds by exact resolution collapses the metadata-only model to 0.534 - chance - while the image features still reach 0.847, and metadata adds only +0.011 on top of them. Trivial appearance features reach only 0.540, so the model is not merely separating clean tyres from dirty ones; the discriminative power sits in micro-texture, with LBP alone at 0.819 and GLCM at 0.768. The quality gate passes 93% of this dataset against 22% of the legacy one.",
+  "decision": "Adopt the Mendeley dataset for training, and change what the system claims rather than overstating what the data supports. It cannot support a tread-depth or tread-wear claim, because its labels are not about tread depth. It can support a visible tyre-condition screener: worn, cracked or damaged rubber versus rubber in good condition. All reported metrics must come from resolution-grouped folds, which is the conservative estimate, because plain folds are inflated by roughly three points of session fingerprinting. docs/DATA.md is corrected to state the measured facts rather than the dataset page's claims.",
+  "seed": 42,
+  "config": {
+    "feature_table": "outputs/features/mendeley_tyres.parquet",
+    "n_features": 46
+  },
+  "timestamp": "2026-09-11T11:53:47+00:00",
+  "git_commit": "d839469",
+  "git_dirty": true,
+  "python": "3.12.12"
+}

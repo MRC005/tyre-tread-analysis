@@ -1,0 +1,94 @@
+# ---------------------------------------------------------------------------
+# Image datasets
+# ---------------------------------------------------------------------------
+# Deliberately untracked. The original scraped dataset is 357 MB of third-party
+# stock and press photographs whose licence is recorded as "Unknown" upstream, so
+# redistributing it from this repository is a legal exposure independent of the
+# machine-learning questions. The Mendeley dataset is CC BY 4.0 and could be
+# redistributed with attribution, but at 2.7 GB it belongs in object storage or a
+# user's own download rather than in Git history.
+#
+# docs/DATA.md documents how to obtain each dataset.
+data/good/
+data/bad/
+data/clean/
+data/augmented/
+data/images/
+data/external/
+data/processed/
+
+# ...but hand-made annotations ARE tracked. They are small, they took human effort to
+# produce, and without them the tread-versus-sidewall experiment cannot be reproduced.
+!data/annotations/
+!data/annotations/*.json
+
+# Extracted feature tables - regenerable from the datasets
+outputs/features/
+
+# Model artifacts. Small enough to track, but a binary blob per training run
+# bloats history fast; publish releases instead.
+artifacts/*.joblib
+
+# ---------------------------------------------------------------------------
+# Frontend
+# ---------------------------------------------------------------------------
+frontend/node_modules/
+frontend/dist/
+frontend/.env.local
+frontend/.env.*.local
+# Local-only sample photographs used for manual browser testing. They come from the
+# image datasets, which are not redistributable, so they must not be committed - and
+# a clean clone simply has no fixtures, which is correct.
+frontend/public/__test/
+
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+.venv/
+venv/
+env/
+.python-version
+
+# ---------------------------------------------------------------------------
+# Tooling
+# ---------------------------------------------------------------------------
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+coverage.xml
+.ipynb_checkpoints/
+
+# ---------------------------------------------------------------------------
+# Secrets and local configuration - never commit these
+# ---------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# ---------------------------------------------------------------------------
+# Local tooling
+# ---------------------------------------------------------------------------
+# Agent/editor scratch state and worktrees. launch.json is a local dev-server
+# convenience, not project configuration.
+.claude/
+
+# ---------------------------------------------------------------------------
+# OS and editor
+# ---------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp

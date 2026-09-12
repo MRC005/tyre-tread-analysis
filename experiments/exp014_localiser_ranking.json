@@ -1,0 +1,85 @@
+{
+  "experiment_id": "exp014_localiser_ranking",
+  "title": "Ranking simple tread localisers against an exact ground truth",
+  "hypothesis": "Tread carries dense, dark, directionally coherent texture that its surroundings do not, so a texture-energy search should localise it better than a fixed centre-band crop - and that improvement should show up downstream as a calibrated probability closer to the close-up value, not merely as a better overlap number.",
+  "dataset": "29 Mendeley images composited into constant-size frames with the tyre shrunk 2.5x, so the true tyre rectangle is known exactly. Identical images for every method.",
+  "method": "Five localisers: the production centre band; the production contour refinement; densest edge energy; edge energy weighted by darkness; and edge energy weighted by darkness and structure-tensor coherence. Region search is exhaustive over a coarse score map via an integral image.",
+  "validation": "Intersection-over-union and purity against the known box, plus the downstream absolute probability drift from the close-up value. An oracle crop supplies the floor. Ranking only - the synthetic surround is more forgiving than a real wheel arch.",
+  "metrics": {
+    "n_images": 29,
+    "zoom_out": 2.5,
+    "per_localiser": [
+      {
+        "localiser": "centre_band",
+        "iou_median": 0.26666666666666666,
+        "iou_mean": 0.26655441381408435,
+        "purity_median": 0.26666666666666666,
+        "drift_mean": 0.405994848250362,
+        "assessable_rate": 0.9655172413793104,
+        "confidence_mean": 0.0
+      },
+      {
+        "localiser": "contour_band",
+        "iou_median": 0.26666666666666666,
+        "iou_mean": 0.46743482750501775,
+        "purity_median": 0.26666666666666666,
+        "drift_mean": 0.3488355333456084,
+        "assessable_rate": 0.9655172413793104,
+        "confidence_mean": 0.07394351053639847
+      },
+      {
+        "localiser": "texture_energy",
+        "iou_median": 0.5421686746987951,
+        "iou_mean": 0.5286605218315359,
+        "purity_median": 1.0,
+        "drift_mean": 0.08014152715178523,
+        "assessable_rate": 0.9655172413793104,
+        "confidence_mean": 0.9941243803911689
+      },
+      {
+        "localiser": "dark_texture",
+        "iou_median": 0.5017343838231735,
+        "iou_mean": 0.48614494922118356,
+        "purity_median": 1.0,
+        "drift_mean": 0.0936976457203783,
+        "assessable_rate": 0.9655172413793104,
+        "confidence_mean": 0.994648809427071
+      },
+      {
+        "localiser": "multi_scale_score",
+        "iou_median": 0.5410288582183187,
+        "iou_mean": 0.5042658304082558,
+        "purity_median": 0.9645885028949545,
+        "drift_mean": 0.11776312029277679,
+        "assessable_rate": 0.9310344827586207,
+        "confidence_mean": 0.935727238737843
+      }
+    ],
+    "oracle_drift": 0.05031563942426673,
+    "gap_closed_by_best": 0.9161438538227813,
+    "confidence_iou_correlation": {
+      "centre_band": NaN,
+      "contour_band": 0.9999951323418788,
+      "texture_energy": -0.41560499819341584,
+      "dark_texture": 0.14760461106474707,
+      "multi_scale_score": 0.40897293924438066
+    }
+  },
+  "tables": {},
+  "interpretation": "",
+  "decision": "",
+  "seed": 17,
+  "config": {
+    "localisers": [
+      "centre_band",
+      "contour_band",
+      "texture_energy",
+      "dark_texture",
+      "multi_scale_score"
+    ]
+  },
+  "timestamp": "2026-09-12T19:58:10+00:00",
+  "git_commit": "d839469",
+  "git_dirty": true,
+  "python": "3.12.12"
+}

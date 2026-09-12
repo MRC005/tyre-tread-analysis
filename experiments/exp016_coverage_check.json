@@ -1,0 +1,137 @@
+{
+  "experiment_id": "exp016_coverage_check",
+  "title": "Detecting a too-distant photograph, instead of trying to crop one",
+  "hypothesis": "Texture search is a poor localiser but the underlying signal separates framings well. Reformulated as a proportion - how much of the frame carries tyre-like texture - it should support a quality-gate check that refuses wide shots with 'move closer' at an acceptable false-refusal rate on well-framed photographs.",
+  "dataset": "60 Mendeley images as close-ups, each also composited at [1.6, 2.0, 2.5, 3.2]x shrink into a constant-size frame, so the check is characterised across a range of distances rather than one.",
+  "method": "subject_coverage: fraction of coarse cells whose edge energy, weighted towards dark regions, reaches 40% of the frame's 95th-percentile score. A high percentile rather than the maximum, so one highlight cannot set the scale.",
+  "validation": "Within-subject: every wide composite derives from a close-up in the same set. ROC-AUC per zoom level, plus a threshold sweep reporting false refusal on close-ups against catch rate at each distance.",
+  "metrics": {
+    "n_images": 60,
+    "close_median": 0.4205113378684807,
+    "close_p10": 0.3072449149188762,
+    "per_zoom": {
+      "1.6": {
+        "median": 0.217333701375913,
+        "p10": 0.16493990929705216,
+        "p90": 0.28099594838596037,
+        "auc": 0.9515277777777778
+      },
+      "2.0": {
+        "median": 0.1593849913993947,
+        "p10": 0.12751428571428572,
+        "p90": 0.2235994904957868,
+        "auc": 0.9916666666666666
+      },
+      "2.5": {
+        "median": 0.12429586635413178,
+        "p10": 0.10097604234590157,
+        "p90": 0.1930409654413542,
+        "auc": 0.9841666666666667
+      },
+      "3.2": {
+        "median": 0.12330010489883858,
+        "p10": 0.08080466956865849,
+        "p90": 0.36642857142857144,
+        "auc": 0.9175
+      }
+    },
+    "threshold_sweep": [
+      {
+        "threshold": 0.2,
+        "false_refusal": 0.0,
+        "catch": {
+          "1.6": 0.4166666666666667,
+          "2.0": 0.8166666666666667,
+          "2.5": 0.9,
+          "3.2": 0.7
+        }
+      },
+      {
+        "threshold": 0.25,
+        "false_refusal": 0.03333333333333333,
+        "catch": {
+          "1.6": 0.7666666666666667,
+          "2.0": 0.9666666666666667,
+          "2.5": 0.9666666666666667,
+          "3.2": 0.7666666666666667
+        }
+      },
+      {
+        "threshold": 0.3,
+        "false_refusal": 0.1,
+        "catch": {
+          "1.6": 0.9,
+          "2.0": 0.9833333333333333,
+          "2.5": 0.9666666666666667,
+          "3.2": 0.8166666666666667
+        }
+      },
+      {
+        "threshold": 0.35,
+        "false_refusal": 0.25,
+        "catch": {
+          "1.6": 0.9333333333333333,
+          "2.0": 0.9833333333333333,
+          "2.5": 0.9666666666666667,
+          "3.2": 0.8833333333333333
+        }
+      },
+      {
+        "threshold": 0.4,
+        "false_refusal": 0.43333333333333335,
+        "catch": {
+          "1.6": 0.9666666666666667,
+          "2.0": 1.0,
+          "2.5": 0.9833333333333333,
+          "3.2": 0.9166666666666666
+        }
+      },
+      {
+        "threshold": 0.45,
+        "false_refusal": 0.5833333333333334,
+        "catch": {
+          "1.6": 1.0,
+          "2.0": 1.0,
+          "2.5": 0.9833333333333333,
+          "3.2": 0.9666666666666667
+        }
+      },
+      {
+        "threshold": 0.5,
+        "false_refusal": 0.7,
+        "catch": {
+          "1.6": 1.0,
+          "2.0": 1.0,
+          "2.5": 1.0,
+          "3.2": 0.9666666666666667
+        }
+      }
+    ],
+    "recommended": {
+      "threshold": 0.2,
+      "false_refusal": 0.0,
+      "catch": {
+        "1.6": 0.4166666666666667,
+        "2.0": 0.8166666666666667,
+        "2.5": 0.9,
+        "3.2": 0.7
+      }
+    }
+  },
+  "tables": {},
+  "interpretation": "The reformulation works where the localiser did not. As a proportion the signal uses its whole range instead of saturating: close-ups have a median coverage of 0.421 with a 10th percentile of 0.307, while wide shots sit between 0.12 and 0.22. ROC-AUC against close-ups is 0.95 to 0.99 across 1.6x to 2.5x. That translates into a usable operating point, which is what exp015 could not find. Refusing below 0.20 rejects **none** of the close-ups in this set while catching 90% of 2.5x wide shots and 82% at 2.0x; moving to 0.25 costs 3.3% false refusal and catches 97%. The contrast with the localiser is the whole point - the same underlying measurement, asked a question it can answer. One irregularity is worth recording rather than smoothing over: catch rate falls at 3.2x (70%) relative to 2.5x (90%), and the 90th percentile of coverage rises to 0.366. At extreme shrink the tyre is small enough that the synthetic background begins to dominate the 95th-percentile normalisation, so the statistic is measured against a different scale. The check is therefore characterised for moderate framing errors, which is the realistic case, and is not claimed to degrade monotonically forever.",
+  "decision": "Adopt subject_coverage as a quality-gate check with a refusal threshold of 0.20, not as a localiser and not as a crop. This is option D: when the tyre does not fill enough of the frame, say so and ask for a closer photograph, rather than cropping badly or analysing mostly background. It also completes the live capture guidance: the same statistic can drive a 'move closer' hint before the shutter, so most users never reach the refusal. Not yet implemented in production - reported for approval first. Two caveats bound the claim. All of this is measured on synthetic composites with a hard rectangular boundary and a uniform surround, which is easier than a real wheel arch; the threshold needs confirming on real wide-shot photographs before it is trusted. And the check detects framing, not content: it cannot tell a distant tyre from a close-up of something that is not a tyre at all.",
+  "seed": 41,
+  "config": {
+    "zooms": [
+      1.6,
+      2.0,
+      2.5,
+      3.2
+    ]
+  },
+  "timestamp": "2026-09-12T21:46:08+00:00",
+  "git_commit": "d839469",
+  "git_dirty": true,
+  "python": "3.12.12"
+}

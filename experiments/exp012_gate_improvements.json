@@ -1,0 +1,100 @@
+{
+  "experiment_id": "exp012_gate_improvements",
+  "title": "Closing the quality gate's blind spots at a 1% false-reject cost",
+  "hypothesis": "Underexposure, sensor noise and heavy compression evade the gate because exposure is measured after CLAHE - which is designed to hide it - and because noise and compression are not measured at all. Measuring exposure on the raw luma, adding dynamic range to separate a dark tyre from a dark photograph, and adding a median-residual noise statistic and a JPEG blockiness ratio should close all three without materially raising the false-reject rate, and specifically without rejecting ordinary phone JPEGs.",
+  "dataset": "400 images sampled at random from those passing the quality gate on the Mendeley dataset, each also evaluated under seven degradations including two ordinary phone-grade JPEG qualities as negative controls.",
+  "method": "Five statistics computed on the raw luma: mean intensity; 2nd-to-98th percentile dynamic range; fraction of pixels above 224; mean absolute residual after a 3x3 median filter; and the ratio of horizontal luma steps on the JPEG 8-pixel grid to those off it. Thresholds chosen from the measured distribution over real images, then checked against the degradations - not tuned against the degradations.",
+  "validation": "False-reject rate measured on real images that currently pass. Catch rate measured per degradation. Quality-60 and quality-85 JPEGs act as negative controls: a gate that refuses these would be unusable on phone photographs.",
+  "metrics": {
+    "n_real_images": 400,
+    "distribution_over_real_images": {
+      "raw_mean_intensity": {
+        "p1": 45.579852180480955,
+        "p50": 127.42998886108398,
+        "p99": 181.44902145385743,
+        "max": 196.8770294189453
+      },
+      "dynamic_range": {
+        "p1": 55.980000000000004,
+        "p50": 154.0,
+        "p99": 222.02999999999997,
+        "max": 246.0
+      },
+      "bright_fraction": {
+        "p1": 0.0,
+        "p50": 0.005394965410232544,
+        "p99": 0.06811010502278804,
+        "max": 0.1174570620059967
+      },
+      "noise": {
+        "p1": 0.5563538086414337,
+        "p50": 1.72730553150177,
+        "p99": 8.967478723525998,
+        "max": 9.646991729736328
+      },
+      "blockiness": {
+        "p1": 0.8929035913932449,
+        "p50": 1.0012408337081684,
+        "p99": 1.366053905850636,
+        "max": 1.595301165570503
+      }
+    },
+    "false_reject_within_current_accepted": 0.0,
+    "dataset_pass_rate_before": 0.935,
+    "dataset_pass_rate_after": 0.9073275862068966,
+    "newly_refused_share_of_previously_accepted": 0.02767241379310348,
+    "catch_rate": {
+      "underexposed": 1.0,
+      "mildly_dark": 0.16,
+      "overexposed": 0.865,
+      "sensor_noise": 1.0,
+      "jpeg_q12_heavy": 0.93,
+      "jpeg_q60_normal": 0.065,
+      "jpeg_q85_normal": 0.005
+    },
+    "thresholds": {
+      "min_raw_mean_intensity": 40.0,
+      "min_dynamic_range": 50.0,
+      "max_bright_fraction": 0.2,
+      "max_noise": 11.0,
+      "max_blockiness": 2.2
+    },
+    "end_to_end_before_after": {
+      "underexposed_refused": {
+        "before": 0.53,
+        "after": 1.0
+      },
+      "heavy_jpeg_refused": {
+        "before": 0.07,
+        "after": 0.93
+      },
+      "sensor_noise_refused": {
+        "before": 0.0,
+        "after": 1.0
+      },
+      "overexposed_refused": {
+        "before": 0.78,
+        "after": 0.78
+      },
+      "clean_answered_confidently": {
+        "before": 0.93,
+        "after": 0.93
+      },
+      "max_silent_flip_rate": {
+        "before": 0.2,
+        "after": 0.0
+      }
+    }
+  },
+  "tables": {},
+  "interpretation": "All three blind spots close. End to end (exp010), underexposed images refused rise from 53% to 100%, heavy JPEG from 7% to 93%, and sensor noise from 0% to 100%. The silent-flip rate - a confident verdict that changed under degradation with nothing to warn the user - falls from a worst case of 20% to **zero across every degradation tested**. The cost is measured as a fall in the dataset pass rate from 93.5% to 90.7% - about 2.8% of previously-accepted images are now refused, chiefly for being too dark. Measuring false rejection on images that already pass the new gate would be circular and returns nearly zero by construction; the pass-rate change is the figure that means something. The share of clean images answered confidently is unchanged at 93%. The negative controls behave: ordinary quality-85 and quality-60 phone JPEGs are not rejected, because blockiness measures about 1.19 and 1.52 for them against 3.40 at quality 12, and the threshold sits at 2.2. Dynamic range earns its place as a separate check. A well-exposed photograph of a black tyre and an underexposed photograph both have a low mean, but only the underexposed one has a compressed histogram; the 15 darkest real images span a dynamic range of 36-151 against 19-52 for underexposed versions. Tightening the bright-fraction threshold from 0.40 to 0.20 was free: the maximum over 400 real images is 0.197.",
+  "decision": "Adopt all five checks. The remaining weakness is overexposure, unchanged at 78% refused with 17% still answered confidently - though its silent-flip rate is now zero, so the residual risk is a wrong answer being offered rather than a changed one. Tightening further starts refusing real images and is not justified on this evidence. One consequence worth recording: quality thresholds are stored in the model artifact, so a served model keeps the thresholds it was validated under and changing the code alone does not change inference. The artifact must be rebuilt for a threshold change to take effect - which is the correct behaviour, and was discovered by a threshold change appearing to do nothing.",
+  "seed": 21,
+  "config": {
+    "n_real": 400
+  },
+  "timestamp": "2026-09-11T14:14:30+00:00",
+  "git_commit": "d839469",
+  "git_dirty": true,
+  "python": "3.12.12"
+}

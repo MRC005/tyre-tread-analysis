@@ -1,0 +1,87 @@
+{
+  "experiment_id": "exp011_tread_vs_sidewall",
+  "title": "Half the accepted images are not tread, and the surface cannot be detected reliably",
+  "hypothesis": "The ROI stage cannot distinguish the tread from the sidewall, so a significant share of accepted images are sidewall photographs being assessed as though they were tread. If the surface is detectable reliably, non-tread images can be refused; if it is only partly detectable, refusing would cost more than it gains.",
+  "dataset": "116 images sampled at random from those passing the quality gate on the Mendeley dataset, hand-labelled tread / sidewall / mixed. Labels in data/annotations/surface_labels.json.",
+  "method": "Balanced logistic regression over the production feature set, and over the 8 interpretable structure features that tyretread.imaging.surface ships. Association between surface and condition label tested with chi-square.",
+  "validation": "Out-of-fold probabilities averaged over 10 runs of stratified 5-fold. ROC-AUC with a 3000-sample percentile bootstrap 95% confidence interval, which 120 labels make essential.",
+  "metrics": {
+    "n_annotated": 116,
+    "surface_counts": {
+      "tread": 62,
+      "sidewall": 45,
+      "mixed": 9
+    },
+    "fraction_not_clean_tread": 0.46551724137931033,
+    "surface_condition_chi2_p": 1.0,
+    "detector_auc_all_features": 0.8016726403823179,
+    "detector_auc_interpretable": 0.796594982078853,
+    "detector_auc_ci95": [
+      0.6980068824404762,
+      0.8782927707373273
+    ],
+    "operating_points": [
+      {
+        "threshold": 0.25,
+        "tread_kept": 0.967741935483871,
+        "non_tread_flagged": 0.40740740740740744,
+        "false_flag": 0.032258064516129004
+      },
+      {
+        "threshold": 0.35,
+        "tread_kept": 0.9516129032258065,
+        "non_tread_flagged": 0.4444444444444444,
+        "false_flag": 0.048387096774193505
+      },
+      {
+        "threshold": 0.45,
+        "tread_kept": 0.9032258064516129,
+        "non_tread_flagged": 0.6111111111111112,
+        "false_flag": 0.09677419354838712
+      },
+      {
+        "threshold": 0.5,
+        "tread_kept": 0.8225806451612904,
+        "non_tread_flagged": 0.7222222222222222,
+        "false_flag": 0.17741935483870963
+      },
+      {
+        "threshold": 0.6,
+        "tread_kept": 0.7096774193548387,
+        "non_tread_flagged": 0.7962962962962963,
+        "false_flag": 0.29032258064516125
+      },
+      {
+        "threshold": 0.7,
+        "tread_kept": 0.4032258064516129,
+        "non_tread_flagged": 0.8333333333333334,
+        "false_flag": 0.5967741935483871
+      }
+    ],
+    "shipped_thresholds": {
+      "not_tread_below": 0.35,
+      "tread_above": 0.6
+    }
+  },
+  "tables": {},
+  "interpretation": "47% of the images the system accepts are not clean tread - 45 sidewall close-ups and 9 mixed out of 116. Many are photographs of moulded sidewall lettering, which contains no tread at all. The surface is not confounded with the condition label (chi-square p = 1.00); defect prevalence is similar across surfaces, so the model is not covertly learning 'this is a sidewall photograph'. That is the reassuring half. The detector reaches AUC 0.797 [0.698, 0.878] - real signal, but not reliable enough to reject on. At a threshold flagging three-quarters of non-tread images it also flags one genuine tread photograph in five. Given that the production model performs comparably on both surfaces, refusing sidewall images would discard working functionality to enforce a distinction the system cannot make confidently.",
+  "decision": "Report the surface, do not enforce it. The inspection states which surface it believes it assessed and says when it does not know, using the thresholds 0.35 and 0.6 - the lower one chosen at roughly 5% false flagging of genuine tread. The user-facing copy for a non-tread result states explicitly that the assessment says nothing about remaining tread. This is the honest reading of 'do not pretend the system can identify tread': it neither claims a tread assessment it cannot support, nor throws away a sidewall assessment it can. The detector is fitted on 120 labels and should be refitted on a larger annotated sample before being relied on more heavily. Refusing non-tread images remains a reasonable future option if tread-specific labels ever become available.",
+  "seed": 42,
+  "config": {
+    "surface_features": [
+      "spectral_slope_r2",
+      "spectral_slope",
+      "glcm_correlation_d1",
+      "glcm_correlation_d2",
+      "orientation_anisotropy",
+      "orientation_coherence",
+      "edge_density",
+      "gradient_mean"
+    ],
+    "n_bootstrap": 3000
+  },
+  "timestamp": "2026-09-11T14:10:43+00:00",
+  "git_commit": "d839469",
+  "git_dirty": true,
+  "python": "3.12.12"
+}
