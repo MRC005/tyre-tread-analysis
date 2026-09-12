@@ -1,9 +1,14 @@
 # Deployment
 
-**Nothing is deployed yet.** This file records what a deployment needs so the work is
-ready when the local system is stable. It contains no credentials and no invented
-URLs; the placeholders marked **[you provide]** are values only the repository owner
-can supply.
+**Status: the model release is published and the deployment configuration is verified.
+The two hosted services are not yet created** — that needs account access.
+
+`v0.2.0` carries the model artifact:
+<https://github.com/MRC005/tyre-tread-analysis/releases/tag/v0.2.0>
+
+The build command, the start command, production CORS and model loading were all
+dry-run locally against the published release before this was written. The
+placeholders marked **[you provide]** are values only the repository owner can supply.
 
 Target topology: **frontend on Vercel, backend on Render.**
 
@@ -23,7 +28,8 @@ A web service built from this repository.
 | Setting | Value |
 |---|---|
 | Environment | Python 3.11 or later |
-| Build command | `pip install -r requirements.txt` |
+| Blueprint | `render.yaml` in the repository root — Render can read it directly |
+| Build command | see `render.yaml` (installs deps, then fetches the release artifact) |
 | Start command | `uvicorn tyretread.api.app:create_app --factory --host 0.0.0.0 --port $PORT` |
 | Health check path | `/health` |
 | Instance type | Free tier is enough to demonstrate; see the cold-start note below |
@@ -138,3 +144,39 @@ Nothing yet. When deployment starts:
 
 No account will be created, no service configured and no value invented on the owner's
 behalf.
+
+
+---
+
+## Verified before deployment
+
+Each of these was run locally against the published `v0.2.0` release, not assumed:
+
+| Check | Result |
+|---|---|
+| Release asset downloads anonymously | ✅ 726,706 bytes, SHA-256 matches the local artifact |
+| Downloaded artifact loads and predicts | ✅ `svm_rbf_c10`, 46 features |
+| Exact Render build command | ✅ fetches both assets into `artifacts/` |
+| Exact start command with `TYRETREAD_ENV=production` | ✅ boots, `/health` reports `model_loaded: true` |
+| Production CORS with an explicit origin | ✅ `access-control-allow-origin` returned |
+| Wildcard CORS in production | ✅ refused at start-up, as designed |
+
+## The served model
+
+| | |
+|---|---|
+| Artifact | `current` · format v1 · svm_rbf_c10 |
+| Release | `v0.2.0` |
+| Balanced accuracy | 0.912 ± 0.014 |
+| Brier / ECE | 0.069 / 0.066 |
+| Abstention rate | 16.6% |
+| Decision threshold | 0.51 ±0.2 |
+
+Verify after deploying that `GET /v1/model` reports exactly these numbers. A mismatch
+means the build fetched a different release.
+
+## Camera on the deployed origin
+
+`frontend/vercel.json` sets `Permissions-Policy: camera=(self)`. Without it some
+browsers block `getUserMedia` on the deployed origin even over HTTPS, which would make
+the camera appear broken in production while working locally.

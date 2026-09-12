@@ -1,0 +1,39 @@
+# Render blueprint for the TreadCheck backend.
+#
+# The model artifact is fetched from a versioned GitHub release during the build
+# rather than committed to Git. That keeps the repository free of binaries while
+# making a deploy reproducible: the tag pins an exact model, and `curl -f` fails the
+# build loudly if the asset is missing instead of starting a service with no model.
+services:
+  - type: web
+    name: treadcheck-api
+    runtime: python
+    plan: free
+    region: singapore
+    buildCommand: |
+      pip install --upgrade pip
+      pip install -r requirements.txt
+      mkdir -p artifacts
+      curl -fsSL -o "artifacts/${TYRETREAD_MODEL_ID}.joblib" \
+        "https://github.com/MRC005/tyre-tread-analysis/releases/download/${TYRETREAD_MODEL_VERSION}/current.joblib"
+      curl -fsSL -o "artifacts/${TYRETREAD_MODEL_ID}.json" \
+        "https://github.com/MRC005/tyre-tread-analysis/releases/download/${TYRETREAD_MODEL_VERSION}/current.json"
+    startCommand: uvicorn tyretread.api.app:create_app --factory --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.9"
+      - key: TYRETREAD_ENV
+        value: production
+      - key: TYRETREAD_MODEL_ID
+        value: current
+      - key: TYRETREAD_MODEL_VERSION
+        value: v0.2.0
+      - key: TYRETREAD_LOG_LEVEL
+        value: INFO
+      - key: TYRETREAD_MAX_UPLOAD_BYTES
+        value: "12582912"
+      # Set to the Vercel deployment URL. The API refuses to start with a wildcard
+      # when TYRETREAD_ENV=production, so this must be a real origin.
+      - key: TYRETREAD_CORS_ORIGINS
+        sync: false

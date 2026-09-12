@@ -101,7 +101,7 @@ with paired t-tests (`exp007`):
 
 | Model | Balanced accuracy | vs best |
 |---|---|---|
-| **RBF-SVM, C=10** | **0.871 ± 0.034** | — |
+| **RBF-SVM, C=10** | **0.912 ± 0.014** | — |
 | RBF-SVM, C=1 | 0.855 | p < 0.0001 |
 | Linear SVM | 0.853 | p < 0.0001 |
 | Logistic regression | 0.846 ± 0.016 | p < 0.0001 |
@@ -128,13 +128,13 @@ The system says so rather than substituting a surrogate. See
 
 | | |
 |---|---|
-| Brier score | **0.072** |
-| Expected calibration error | **0.070** |
-| Decision threshold | 0.50 (chosen against a defect-recall target, not assumed) |
-| Abstention band | ±0.20 |
-| Abstention rate | **17.0%** |
-| Balanced accuracy on answered cases | **0.957** |
-| Defect recall on answered cases | 0.967 |
+| Brier score | **0.069** |
+| Expected calibration error | **0.066** |
+| Decision threshold | 0.51 (chosen against a defect-recall target, not assumed) |
+| Abstention band | ±0.2 |
+| Abstention rate | **16.6%** |
+| Balanced accuracy on answered cases | **0.960** |
+| Defect recall on answered cases | 0.965 |
 
 Threshold and band are both chosen from **out-of-fold** probabilities. The original
 project chose its class boundaries from in-sample predictions, which is why they were
@@ -400,7 +400,7 @@ tyretread/           the package — one inference path, shared by API, CLI and 
   api/               FastAPI app, settings, response schemas
   inspect.py         the single production entry point
 experiments/         numbered, self-describing, each writing a JSON record + LOG.md
-tests/               131 backend tests, including regression tests on the findings
+tests/               136 backend tests, including regression tests on the findings
 docs/                AUDIT.md · DATA.md · DEPLOYMENT.md · FRONTEND.md · PHONE_TESTING.md
 src/                 the original pipeline, preserved and still reproducing 74.8%
 ```
@@ -416,8 +416,11 @@ range, glare, noise, compression and resolution; surface reporting; calibrated m
 with abstention; persisted 0.72 MB artifact; FastAPI backend; mobile-first frontend
 with camera capture; 130 backend + 33 frontend tests; 12 recorded experiments.
 
-**Next.** Verify camera capture on a physical phone over HTTPS, then deploy to Vercel
-and Render using a versioned release asset for the model.
+**Next.** Create the Vercel and Render services (configuration and model release are
+done and verified), then verify camera capture on a physical phone over HTTPS.
+
+The model artifact is published as a release asset:
+[`v0.2.0`](https://github.com/MRC005/tyre-tread-analysis/releases/tag/v0.2.0).
 
 **Later.** Tread-depth regression *if* expert-labelled depth data becomes available —
 not before. Tread-versus-sidewall discrimination. Multi-image inspection.
