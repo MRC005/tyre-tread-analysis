@@ -1,6 +1,12 @@
-# Tyre Condition Screening
+# TreadCheck — Tyre Condition Screening
 
 **Assistive visual screening of tyre condition from a smartphone photograph.**
+
+**▶ Live: [tyre-tread-analysis-one.vercel.app](https://tyre-tread-analysis-one.vercel.app)** · API: [`/health`](https://treadcheck-api.onrender.com/health) · [`/v1/model`](https://treadcheck-api.onrender.com/v1/model)
+
+> The API runs on a free Render instance that sleeps after 15 minutes idle. The first
+> request after a gap can take 30–60 seconds while it wakes; the app shows a retry
+> rather than hanging.
 
 Upload or photograph a tyre. The system decides whether the image is good enough to
 assess, and if it is, reports whether the surface resembles tyres with visible wear or
@@ -416,11 +422,13 @@ range, glare, noise, compression and resolution; surface reporting; calibrated m
 with abstention; persisted 0.72 MB artifact; FastAPI backend; mobile-first frontend
 with camera capture; 130 backend + 33 frontend tests; 12 recorded experiments.
 
-**Next.** Create the Vercel and Render services (configuration and model release are
-done and verified), then verify camera capture on a physical phone over HTTPS.
+**Deployed.** Frontend on Vercel, backend on Render, model fetched at build time from
+the [`v0.2.0`](https://github.com/MRC005/tyre-tread-analysis/releases/tag/v0.2.0)
+release asset. Production smoke tests pass for every verdict and every error path.
 
-The model artifact is published as a release asset:
-[`v0.2.0`](https://github.com/MRC005/tyre-tread-analysis/releases/tag/v0.2.0).
+**Next.** Verify camera capture on a physical phone over HTTPS — the one path that
+cannot be tested from a desktop. Then independent field validation on photographs the
+system has never seen.
 
 **Later.** Tread-depth regression *if* expert-labelled depth data becomes available —
 not before. Tread-versus-sidewall discrimination. Multi-image inspection.

@@ -1,7 +1,12 @@
 # Deployment
 
-**Status: the model release is published and the deployment configuration is verified.
-The two hosted services are not yet created** — that needs account access.
+**Status: deployed and verified in production.**
+
+| | |
+|---|---|
+| Frontend | https://tyre-tread-analysis-one.vercel.app |
+| Backend | https://treadcheck-api.onrender.com |
+| Model | [`v0.2.0`](https://github.com/MRC005/tyre-tread-analysis/releases/tag/v0.2.0) release asset |
 
 `v0.2.0` carries the model artifact:
 <https://github.com/MRC005/tyre-tread-analysis/releases/tag/v0.2.0>
@@ -180,3 +185,31 @@ means the build fetched a different release.
 `frontend/vercel.json` sets `Permissions-Policy: camera=(self)`. Without it some
 browsers block `getUserMedia` on the deployed origin even over HTTPS, which would make
 the camera appear broken in production while working locally.
+
+
+---
+
+## Production verification
+
+Run against the live services, not locally.
+
+| Check | Result |
+|---|---|
+| `GET /health` | `status: ok`, `model_loaded: true`, version 0.2.0 |
+| `GET /v1/model` | balanced accuracy 0.9117, Brier 0.069 — **matches the release notes exactly** |
+| CORS from the Vercel origin | ✅ `access-control-allow-origin` returned, preflight correct |
+| Healthy tread | ✅ `Healthy`, p = 0.126 |
+| Defective sidewall | ✅ `Defect detected`, p = 0.974, surface `sidewall_or_shoulder` |
+| Borderline | ✅ `Attention recommended`, p = 0.691 |
+| Too dark / blurred | ✅ `Unable to assess` + specific reason |
+| 14 MB upload | ✅ `413 file_too_large` |
+| PDF upload | ✅ `415 unsupported_media_type` |
+| Non-image bytes | ✅ `400 undecodable_image` |
+| Browser end-to-end | ✅ full flow renders on the live site |
+| Security headers | ✅ including `Permissions-Policy: camera=(self)` |
+
+Round trip over the public internet: **155 KB up, 155 KB down, 1.3 s** with all five
+evidence panels; server-side inference 398 ms.
+
+**Still unverified: camera capture on physical hardware.** Everything else on the
+mobile path — HTTPS, upload, orientation handling, result rendering — is confirmed.
