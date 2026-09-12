@@ -57,12 +57,15 @@ describe("inspect", () => {
   });
 
   it("passes the evidence and features flags as query parameters", async () => {
-    const fetchMock = vi.fn(() => respond(200, {}));
+    // Typed parameters, so `mock.calls` carries a real tuple rather than `[][]`.
+    const fetchMock = vi.fn((_input: RequestInfo | URL, _init?: RequestInit) =>
+      respond(200, {}),
+    );
     vi.stubGlobal("fetch", fetchMock);
     await inspect(new Blob(["x"]), { includeEvidence: false, includeFeatures: true });
-    const url = String(fetchMock.mock.calls.at(0)?.at(0));
-    expect(url).toContain("include_evidence=false");
-    expect(url).toContain("include_features=true");
+    const [url] = fetchMock.mock.calls[0]!;
+    expect(String(url)).toContain("include_evidence=false");
+    expect(String(url)).toContain("include_features=true");
   });
 
   it("reports a caller cancellation distinctly from a failure", async () => {
@@ -80,12 +83,16 @@ describe("inspect", () => {
   });
 
   it("sends the image as multipart form data", async () => {
-    const fetchMock = vi.fn(() => respond(200, {}));
+    const fetchMock = vi.fn((_input: RequestInfo | URL, _init?: RequestInit) =>
+      respond(200, {}),
+    );
     vi.stubGlobal("fetch", fetchMock);
     await inspect(new Blob(["x"], { type: "image/jpeg" }));
-    const init = fetchMock.mock.calls.at(0)?.at(1) as unknown as RequestInit;
-    expect(init.method).toBe("POST");
-    expect(init.body).toBeInstanceOf(FormData);
-    expect((init.body as FormData).get("image")).toBeTruthy();
+
+    const [, init] = fetchMock.mock.calls[0]!;
+    expect(init).toBeDefined();
+    expect(init!.method).toBe("POST");
+    expect(init!.body).toBeInstanceOf(FormData);
+    expect((init!.body as FormData).get("image")).toBeTruthy();
   });
 });
