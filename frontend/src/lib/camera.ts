@@ -113,20 +113,39 @@ export function describeCameraError(error: unknown): CameraError {
  * laptop there is no rear camera, and an exact constraint would fail outright instead
  * of falling back to the only camera present.
  */
-export async function openCamera(): Promise<MediaStream> {
+export type Facing = "environment" | "user";
+
+export async function openCamera(facing: Facing = "environment"): Promise<MediaStream> {
   if (!secureContext()) throw new DOMException("insecure context", "SecurityError");
   if (!cameraSupported()) throw new DOMException("unsupported", "NotSupportedError");
 
   return navigator.mediaDevices.getUserMedia({
     video: {
-      facingMode: { ideal: "environment" },
-      // Ask for plenty of pixels: the backend refuses images whose tread band cannot
+      facingMode: { ideal: facing },
+      // Ask for plenty of pixels: the backend refuses images whose analysed band cannot
       // fill the analysis grid, and a 640x480 stream would routinely be refused.
       width: { ideal: 1920 },
       height: { ideal: 1440 },
     },
     audio: false,
   });
+}
+
+/**
+ * Whether this device has more than one camera worth offering a switch for.
+ *
+ * `facingMode: { ideal: ... }` is a preference, not a guarantee: a laptop with only a
+ * front camera correctly falls back to it, and some multi-camera Android devices pick
+ * an unexpected lens. Offering an explicit switch costs one small control and removes
+ * the dead end where the wrong lens opens and the user can do nothing about it.
+ */
+export async function hasMultipleCameras(): Promise<boolean> {
+  try {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    return devices.filter((d) => d.kind === "videoinput").length > 1;
+  } catch {
+    return false;
+  }
 }
 
 export function stopCamera(stream: MediaStream | null): void {

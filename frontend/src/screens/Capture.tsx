@@ -4,10 +4,12 @@ import {
   captureFrame,
   cameraSupported,
   describeCameraError,
+  hasMultipleCameras,
   openCamera,
   secureContext,
   stopCamera,
   type CameraError,
+  type Facing,
 } from "../lib/camera";
 import { GRADE_LABEL, assessFrame, type LiveQuality } from "../lib/liveQuality";
 
@@ -39,6 +41,8 @@ export function Capture({
   const [dragging, setDragging] = useState(false);
   const [announcement, setAnnouncement] = useState("");
   const [live, setLive] = useState<LiveQuality | null>(null);
+  const [facing, setFacing] = useState<Facing>("environment");
+  const [canSwitch, setCanSwitch] = useState(false);
 
   const cameraPossible = cameraSupported() && secureContext();
 
@@ -74,11 +78,11 @@ export function Capture({
     return () => document.removeEventListener("visibilitychange", onVisibility);
   }, [stop]);
 
-  async function start() {
+  async function start(which: Facing = facing) {
     setStarting(true);
     setCameraError(null);
     try {
-      const stream = await openCamera();
+      const stream = await openCamera(which);
       streamRef.current = stream;
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
@@ -87,13 +91,22 @@ export function Capture({
         await videoRef.current.play();
       }
       setStreaming(true);
-      setAnnouncement("Camera ready. Frame the tyre tread and take a photo.");
+      setFacing(which);
+      setAnnouncement("Camera ready. Frame the tyre surface and take a photo.");
+      // Only offer the switch where there is genuinely something to switch to.
+      void hasMultipleCameras().then(setCanSwitch);
     } catch (error) {
       setCameraError(describeCameraError(error));
       setAnnouncement("The camera could not be started.");
     } finally {
       setStarting(false);
     }
+  }
+
+  async function flip() {
+    const next: Facing = facing === "environment" ? "user" : "environment";
+    stop();
+    await start(next);
   }
 
   async function shoot() {
@@ -150,8 +163,12 @@ export function Capture({
 
           {streaming && (
             <>
-              {/* A framing guide, not decoration: the analysis uses the middle band of
-                  the frame, so showing where that is materially improves the photo. */}
+              {/* The guide is the region the backend actually analyses: full frame
+                  width, middle 60% of the height (RoiConfig.centre_band_*). It was
+                  previously an arbitrary 88%x46% inset, which both understated the
+                  width and implied a precision the system does not have - it is a
+                  crop, not a tyre detector. Showing the real crop is the honest
+                  version and is what makes "fill the guide" actionable advice. */}
               <div className="viewfinder__guide" aria-hidden="true">
                 <span
                   className={`viewfinder__guide-band viewfinder__guide-band--${live?.grade ?? "fair"}`}
@@ -168,8 +185,23 @@ export function Capture({
               </div>
 
               <p className="viewfinder__hint">
-                {live?.hint ?? "Fill the guide with the tread"}
+                {live?.hint ?? "Fill the guide with the tyre surface"}
               </p>
+
+              {canSwitch && (
+                <button
+                  type="button"
+                  className="viewfinder__flip"
+                  onClick={flip}
+                  aria-label={
+                    facing === "environment"
+                      ? "Switch to the front camera"
+                      : "Switch to the rear camera"
+                  }
+                >
+                  Flip
+                </button>
+              )}
             </>
           )}
 
@@ -247,7 +279,7 @@ export function Capture({
                   size="lg"
                   block
                   busy={starting}
-                  onClick={start}
+                  onClick={() => void start()}
                 >
                   {cameraError ? "Try camera again" : "Open camera"}
                 </Button>

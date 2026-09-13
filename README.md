@@ -17,6 +17,35 @@ refusal when it cannot tell.
 > legal or roadworthy, and is not a certified inspection. It is a screening aid that
 > tells you when a tyre is worth having looked at properly.
 
+## Why I built this
+
+Tread depth is what lets a tyre clear water and grip in an emergency stop. In India the
+legal minimum is **1.6 mm** for cars and **0.8 mm** for two- and three-wheelers,
+measured as non-skid depth against the tread wear indicator moulded into the tyre —
+[CMVR Rule 95](https://www.atmaindia.org.in/laws-and-regulations/).
+
+Checking that properly needs a gauge and a deliberate look at the tyre. Most drivers
+don't do it between services. A photograph, though, is something anyone can take — and
+visible wear, cracking and perished rubber are exactly the kind of thing a camera can
+pick up.
+
+So the question this project started from was a narrow, testable one: **how far can
+low-cost computer vision get towards tyre-condition screening from an ordinary
+smartphone photograph, and what can it honestly claim?**
+
+The answer turned out to be more interesting than the original pipeline assumed. See
+[the research story](#the-research-story) — the headline feature was measuring image
+resolution rather than tread wear, and finding that out is most of what this repository
+documents.
+
+The eventual use I have in mind is screening: an individual driver before a long
+drive, a fleet or transport operator checking a set of tyres, a workshop triaging what
+to look at first. **Not** replacing a gauge, an inspection, or a fitter.
+
+> *Personal motivation, stated as such.* The regulatory figures above are verifiable;
+> the judgement that drivers under-check their tyres is my own observation and is not
+> presented as a statistic.
+
 ---
 
 ## Contents
@@ -248,6 +277,41 @@ documented as decreasing with tread wear, and reported 74.8% five-fold accuracy.
 **TSCI is therefore reported as a diagnostic and excluded from the classifier** — valid
 but redundant, which is a different finding from worthless, and the distinction is kept
 rather than flattened.
+
+## Where this project fits
+
+Smartphone tyre inspection is an existing commercial field, and it would be dishonest
+to present this as a new idea.
+
+| System | What it does | Relationship to this project |
+|---|---|---|
+| [Anyline Tire Tread Scanner](https://anyline.com/products/tire-tread-scanner) | Reconstructs a 3D model of the tread from a phone camera and reports **numeric tread depth** in millimetres. Aimed at fleets, workshops and tyre retailers. | **Does strictly more than this project.** It measures depth; this system explicitly cannot. |
+| Fleet tyre-management platforms | Tread depth and pressure logging across a fleet, often with dedicated hardware or gauges | Different scope — asset management rather than a single screening check |
+| Manual gauges and the tread wear indicator | The actual legal method | The reference this tool defers to, and tells users to use |
+
+**What this project does not claim:** it is not the first smartphone tyre inspector, it
+does not measure tread depth, and it is not more accurate than a commercial system that
+does.
+
+**What it contributes**, which is a narrower and more defensible claim:
+
+- **A documented self-audit.** The original pipeline's headline feature was shown to be
+  measuring source resolution rather than tread wear, with a causal experiment, and the
+  correction is recorded along with the negative results.
+- **Honest screening rather than fabricated precision.** No depth number is produced,
+  because no dataset available to this project contains one.
+- **An input-quality gate with abstention.** The system refuses photographs it cannot
+  assess and says why, rather than returning a confident answer from a bad image.
+- **Calibrated confidence**, measured (Brier 0.069), not asserted.
+- **Surface reporting** — it says whether it thinks it assessed tread or sidewall,
+  rather than assuming.
+- **Evidence separated from interpretation.** Measured features are shown; no causal
+  explanation is fabricated for a non-linear model.
+- **Runs in a browser** on a free tier, with no app install and no specialised hardware.
+
+None of these is individually novel. The combination, and the fact that each claim is
+backed by a recorded experiment including the ones that failed, is what this repository
+is actually for.
 
 ## Datasets
 

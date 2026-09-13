@@ -113,6 +113,26 @@ export function Home({
           </ol>
         </section>
 
+        <section className="why" aria-label="Why this matters">
+          <h2 className="section-title">Why this matters</h2>
+          <p className="why__lede">
+            Tread depth is what lets a tyre clear water and grip in an emergency stop.
+            In India the legal minimum is <strong>1.6&nbsp;mm</strong> for cars and{" "}
+            <strong>0.8&nbsp;mm</strong> for two- and three-wheelers, measured against
+            the tread wear indicator moulded into the tyre — CMVR Rule 95.
+          </p>
+          <p className="why__lede">
+            Checking that properly needs a gauge and a look at the tyre. Most of us
+            don't do it between services. A photograph is something everyone can take,
+            and visible wear, cracking and perished rubber are things a camera can
+            genuinely pick up.
+          </p>
+          <p className="why__note">
+            This tool is a prompt to look more carefully — not a measurement, and not a
+            substitute for a gauge or a fitter.
+          </p>
+        </section>
+
         <Disclosure
           title="About this check"
           subtitle="What it can and can't tell you"
