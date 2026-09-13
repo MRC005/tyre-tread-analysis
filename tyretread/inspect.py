@@ -192,6 +192,8 @@ def inspect_image(
                 extraction.features, metadata.feature_reference, diagnostics=diagnostics
             ),
             verdict=decision.verdict.value,
+            probability=decision.probability_defect,
+            threshold=decision.threshold,
         )
 
     measurements = {

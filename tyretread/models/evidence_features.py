@@ -1,8 +1,6 @@
 """Measured feature evidence, as distinct from model interpretation.
 
-Why this module is separate from ``explain.py``
------------------------------------------------
-The production model is an RBF-SVM, selected on measured evidence (exp007). A kernel
+This is separate from ``explain.py`` on purpose. The production model is an RBF-SVM, selected on measured evidence (exp007). A kernel
 machine's decision cannot be decomposed into per-feature contributions, and
 ``explain.py`` correctly refuses to invent one.
 
@@ -230,7 +228,13 @@ def feature_evidence(
     )
 
 
-def summarise_agreement(report: EvidenceReport, *, verdict: str) -> EvidenceReport:
+def summarise_agreement(
+    report: EvidenceReport,
+    *,
+    verdict: str,
+    probability: float | None = None,
+    threshold: float | None = None,
+) -> EvidenceReport:
     """State plainly how the individual measurements relate to the overall assessment.
 
     A multivariate model can be confident while every single measurement looks
@@ -245,6 +249,13 @@ def summarise_agreement(report: EvidenceReport, *, verdict: str) -> EvidenceRepo
     overall assessment of good condition" underneath a result that said "Not
     conclusive". Real-device testing caught it. An inconclusive result has no side for
     measurements to agree with, and saying so is the useful thing to report.
+
+    ``probability`` and ``threshold`` are optional but matter when every measurement
+    points the same way. The combined model can still land on the *other* side of the
+    decision line, because the classes are separated by the combination rather than by
+    any single value. Without them the copy said the measurements were merely "not
+    strongly enough" in their own direction, which reads as agreement and quietly
+    inverts what the model actually found. Given them, the disagreement is stated.
     """
     scored = [m for m in report.measurements if m.resembles is not None]
     if not scored:
@@ -265,11 +276,26 @@ def summarise_agreement(report: EvidenceReport, *, verdict: str) -> EvidenceRepo
             )
         else:
             leaning = "good condition" if towards_good == total else "wear or damage"
-            agreement = (
-                f"All {total} measurements lean towards {leaning} individually, but not "
-                "strongly enough in combination for a confident call. The assessment "
-                "uses them together, and together they sit near the boundary."
-            )
+            combined_side = None
+            if probability is not None and threshold is not None:
+                combined_side = (
+                    "wear or damage" if probability >= threshold else "good condition"
+                )
+            if combined_side is not None and combined_side != leaning:
+                agreement = (
+                    f"All {total} measurements resemble tyres in {leaning} when read one "
+                    f"at a time. Together they do not: the combination falls on the "
+                    f"{combined_side} side of the decision line, though not far enough "
+                    "past it for a confident call. The assessment weighs them jointly, "
+                    "which is why it does not simply follow the individual lines above."
+                )
+            else:
+                agreement = (
+                    f"All {total} measurements lean towards {leaning} individually, but "
+                    "not strongly enough in combination for a confident call. The "
+                    "assessment uses them together, and together they sit near the "
+                    "boundary."
+                )
         return EvidenceReport(
             measurements=report.measurements,
             diagnostics=report.diagnostics,

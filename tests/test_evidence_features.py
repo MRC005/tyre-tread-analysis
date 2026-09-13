@@ -131,6 +131,48 @@ def test_a_split_of_measurements_is_reported_as_the_reason_for_inconclusive(refe
     assert "3 of 5" in summarised.agreement
 
 
+def test_unanimous_measurements_do_not_imply_the_model_agreed_with_them(reference):
+    """Regression from a real-device report.
+
+    Every reported measurement resembled tyres in good condition while the calibrated
+    probability (0.683) sat above the decision threshold (0.61) - inside the abstention
+    band, so the verdict was inconclusive. The copy said the measurements were merely
+    "not strongly enough in combination", which reads as though the combination leaned
+    the same way. It did not. The side the model actually landed on must be stated.
+    """
+    from tyretread.models.evidence_features import EvidenceReport, FeatureEvidence
+
+    unanimous_good = [
+        FeatureEvidence(f"f{i}", "desc", 1.0, 50.0, "typical", "tyres in good condition")
+        for i in range(5)
+    ]
+    summarised = summarise_agreement(
+        EvidenceReport(measurements=unanimous_good, diagnostics={}, note=""),
+        verdict="inconclusive",
+        probability=0.683,
+        threshold=0.61,
+    )
+    assert "wear or damage side of the decision line" in summarised.agreement
+    assert "lean towards good condition individually" not in summarised.agreement
+
+
+def test_unanimous_measurements_on_the_models_own_side_read_plainly(reference):
+    from tyretread.models.evidence_features import EvidenceReport, FeatureEvidence
+
+    unanimous_good = [
+        FeatureEvidence(f"f{i}", "desc", 1.0, 50.0, "typical", "tyres in good condition")
+        for i in range(5)
+    ]
+    summarised = summarise_agreement(
+        EvidenceReport(measurements=unanimous_good, diagnostics={}, note=""),
+        verdict="inconclusive",
+        probability=0.55,
+        threshold=0.61,
+    )
+    assert "lean towards good condition individually" in summarised.agreement
+    assert "decision line" not in summarised.agreement
+
+
 def test_disagreement_is_surfaced_not_hidden(reference):
     """The honesty case: a confident verdict with ordinary-looking measurements."""
     ref, _ = reference
