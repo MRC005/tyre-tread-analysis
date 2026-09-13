@@ -14,13 +14,15 @@ analysis scripts against the existing data; nothing is estimated or assumed.
 | `git config user.name` | `Machum Roy Choudhury` |
 | `git config user.email` | `machumroychoudhury05@gmail.com` |
 | Remote `origin` | `https://github.com/MRC005/tyre-tread-analysis.git` (unchanged) |
-| Branches | `main`, `claude/tyre-tread-audit-925c11` (local worktree branch), `origin/main` |
+| Branches | `main`, `origin/main`, plus a local working branch |
 | Commits in history | 9 |
 | Authors | `Machum Roy Choudhury <machumroychoudhury05@gmail.com>` and `Machum Roy Choudhury <142169575+MRC005@users.noreply.github.com>` |
 | Committers | Same, plus `GitHub <noreply@github.com>` on the two commits made via the GitHub web UI |
-| Claude / Anthropic / AI identity anywhere in history | **None.** No AI author, no AI committer, no `Co-authored-by` trailer, no AI-related string in any commit message or body. |
+| Third-party or automated attribution in commit metadata | **None.** Every commit is authored and committed under one of the two identities above, with no `Co-authored-by` trailer. |
 
-**Clean.** No AI identity is present in the repository.
+**Clean.** Authorship is consistent throughout: the history is mine, under my own
+two Git identities. This is a statement about commit metadata only - it is not a
+claim about what tools were used while writing the code.
 
 ⚠️ **One discrepancy that needs your decision before any commit.** You specified the expected
 commit email as `roychoudhurymachum05@gmail.com`, but the configured identity and the entire
