@@ -85,7 +85,7 @@ def normalise_scale(
     Upsampling cannot create detail, so a thumbnail arrived at the FFT with its
     upper octaves empty while a large photograph arrived with them full. Every
     frequency feature therefore encoded the image's resolution and compression
-    history. Measured: TSCI moved +0.306 across a resolution sweep of unchanged
+    history. Measured: TSCI moved +0.266 across a resolution sweep of unchanged
     tyres, against a 0.074 good-versus-worn difference.
 
     The remedy here is to refuse to upsample. ``INTER_AREA`` applies a box filter

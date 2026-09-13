@@ -1,7 +1,5 @@
 """Image quality gate.
 
-Why this is a first-class part of the system
---------------------------------------------
 A classifier asked about an unusable photograph will still return a class and a
 probability. For a system that speaks about vehicle safety, a confident answer
 derived from a blurred or badly framed image is worse than no answer, because the
@@ -15,7 +13,7 @@ The checks originate in the project's own ``src/clean_dataset.py``, which alread
 contained sound heuristics (Laplacian variance for blur, mean intensity for
 exposure, aspect ratio, standard deviation for texture). That logic only ever ran
 offline over the training set. Promoting it to inference is where it earns its
-keep, and it is extended with two checks the original lacked:
+keep, and it is extended with the checks the original lacked:
 
 * **Resolution / oversampling.** Measured in ``experiments/exp003_oversampling``:
   the frequency-domain descriptors are only stable from roughly 3x oversampling

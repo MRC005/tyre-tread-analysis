@@ -1,55 +1,40 @@
-"""Turning a probability into an honest verdict.
+"""Turning a probability into a verdict.
 
-What this system screens for, and what it does not
--------------------------------------------------
-The taxonomy below is chosen from what the training data can actually support, which
-is narrower than the original project claimed.
+Scope. The Mendeley training set labels *tyre condition*: the positive class is mostly
+sidewall cracking, splits, perished rubber and worn tread, the negative class is tyres
+in good condition (exp006). It carries no tread-depth measurements, and exp008 showed a
+model trained on it does not transfer to a dataset labelled for tread wear (0.665
+balanced accuracy against 0.769 within-dataset). The two datasets are not measuring the
+same property.
 
-The Mendeley training set labels **tyre condition**: its positive class is dominated
-by sidewall cracking, splits, perished rubber and worn tread, and its negative class
-is tyres in good condition (exp006). It carries no tread-depth measurements, and
-exp008 showed a model trained on it does not transfer to a dataset labelled for tread
-wear - transfer falls to 0.665 balanced accuracy against 0.769 within-dataset. The
-two datasets do not measure the same property.
+So the scope is visible condition screening: does this surface resemble tyres with
+visible wear or damage, or tyres in good condition. It cannot measure tread depth,
+cannot report millimetres, and cannot say whether a tyre is legal or roadworthy. The
+wording below is written to that scope and ``test_decision.py`` enforces it.
 
-So the honest scope is **visible tyre condition screening**: does this tyre's surface
-resemble tyres with visible wear or damage, or tyres in good condition. The system
-cannot measure tread depth, cannot express a result in millimetres, and cannot say
-whether a tyre is legal or roadworthy. The wording below is written to that scope, and
-``test_decision.py`` enforces it.
+Why this is not a three-class model. The original system reported Safe / Warning /
+Dangerous, but those came from a rule applied on top of a *binary* classifier's
+in-sample predictions, so the three-way output was never validated and the 74.8%
+headline was a binary result (docs/AUDIT.md 3.4). No dataset available here carries
+three-level expert labels or depth in millimetres, so a real three-class model cannot be
+trained or checked.
 
-Why the output is not a three-class model
-----------------------------------------
-The original system reported Safe / Warning / Dangerous. Those labels were produced
-by a rule applied on top of a *binary* classifier's in-sample predictions, so the
-three-way output was never validated and its 74.8% headline figure was a binary
-result (docs/AUDIT.md 3.4). No dataset available to this project carries
-three-level expert labels, and none carries tread depth in millimetres, so a
-genuine three-class model cannot be trained or checked.
-
-What the data does support is a binary distinction plus a calibrated probability.
-The verdict bands below are therefore derived from that one probability and are
-described as levels of *confidence about wear*, not as three physical classes:
+What the data does support is a binary distinction plus a calibrated probability, so the
+four verdicts below are all derived from that one probability:
 
 ``UNABLE_TO_ASSESS``
-    The quality gate refused the image. No probability is computed at all.
+    The quality gate refused the image; no probability is computed at all.
 ``INCONCLUSIVE``
-    A probability too close to the decision threshold to act on. The system says so
-    instead of guessing, because a coin-flip presented as a safety verdict is worse
-    than an admission of uncertainty.
+    Too close to the decision threshold to act on. Saying so beats presenting a
+    coin-flip as a safety verdict.
 ``LIKELY_SERVICEABLE`` / ``DEFECT_SUSPECTED``
-    Confident calls on either side of the band, shown as **Healthy** and **Defect
+    Confident calls either side of the band, shown as **Healthy** and **Defect
     detected**.
 
-    The positive label is deliberately *not* "High risk". Risk to a driver depends
-    mostly on remaining tread depth, which this system cannot measure and for which no
-    ground truth exists in any available dataset. "Defect detected" states what was
-    actually found - surface characteristics matching the damaged group of the training
-    data - without grading a danger the evidence cannot support. The recommendation
-    carries the urgency instead.
-
-The wording of every verdict is hedged on purpose. This is a screening aid working
-from a photograph, and it says so.
+The positive label is not "High risk" on purpose: risk depends mostly on remaining tread
+depth, which this system cannot measure and for which there is no ground truth in any
+dataset here. "Defect detected" states what was found - surface characteristics matching
+the damaged group of the training data - and the recommendation carries the urgency.
 """
 
 from __future__ import annotations

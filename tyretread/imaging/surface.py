@@ -1,23 +1,20 @@
 """Which part of the tyre is this photograph actually showing?
 
-The problem this solves
------------------------
-Hand-labelling a random sample of 120 images that pass the quality gate found that
-**48% of them are not clean tread**: 41% are sidewall close-ups and 7% are mixed
+Hand-labelling a random sample of 120 accepted images - 116 of which still pass the
+gate after exp012 tightened it - found that
+**47% of them are not clean tread**: 39% are sidewall close-ups and 8% are mixed
 (`experiments/exp011_tread_vs_sidewall`). The ROI stage cannot tell the difference - it
 returns a plausible "tread band" from a photograph of a sidewall - so a user who
 photographs the side of their tyre receives an assessment worded as though it were
 about the tread.
 
-Why this is a reporting problem, not a rejection problem
---------------------------------------------------------
-The obvious response is to refuse non-tread images. Measurement argues against it. The
+Why this reports rather than rejects. The obvious response is to refuse non-tread images. Measurement argues against it. The
 production model performs comparably on both surfaces, and the surface a photograph
 shows is **not** associated with its condition label (chi-square p = 0.80), so
 sidewall images are not noise - the system genuinely detects cracking and perished
 rubber there, which is useful.
 
-Meanwhile the detector below reaches only AUC 0.806 [0.718, 0.884]. At a threshold
+Meanwhile the detector below reaches only AUC 0.797 [0.698, 0.878]. At a threshold
 catching three-quarters of non-tread images it falsely rejects one genuine tread
 photograph in five. Refusing on that basis would discard working functionality to
 enforce a distinction the system cannot make reliably.
@@ -26,10 +23,8 @@ So the surface is **reported, not enforced**. The verdict says which surface it
 believes it assessed, and says when it does not know. That is the honest version of
 "do not pretend the system can identify tread".
 
-Model provenance and limits
----------------------------
 A balanced logistic regression over eight interpretable structure features, fitted on
-**120 hand-labelled images** - a small sample, and the wide confidence interval above
+**116 hand-labelled images** - a small sample, and the wide confidence interval above
 is the direct consequence. Its coefficients are stored in the model artifact as plain
 JSON rather than a second binary, so they can be read without unpickling anything.
 

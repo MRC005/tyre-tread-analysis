@@ -1,11 +1,9 @@
 """Frequency-domain descriptors of a tread ROI.
 
-Why this module exists
-----------------------
 The original project's headline feature, TSCI = E_high / E_total, was shown to be
 dominated by an artefact rather than by tread condition: sweeping only the source
-resolution of an unchanged tyre photograph moved TSCI by +0.306, while the whole
-good-versus-worn difference in the dataset was 0.074 (docs/AUDIT.md 3.1-3.2).
+resolution of an unchanged tyre photograph moved TSCI by +0.266, while the whole
+good-versus-worn difference in the dataset was 0.074 (exp001; docs/AUDIT.md 3.1-3.2).
 
 The cause is dimensional. Spatial frequency in a digital image is measured in
 cycles per pixel, and an absolute radius threshold in that space only means the

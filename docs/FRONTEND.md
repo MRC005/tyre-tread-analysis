@@ -306,7 +306,7 @@ application behaviour, and no image or inspection content is attached to it.
 
 ## Testing
 
-**33 frontend tests** (`npm test`) covering API error mapping, camera error
+**45 frontend tests** (`npm test`) covering API error mapping, camera error
 classification, history and its privacy properties, and the result screen — including
 that a refusal does not render as an error, that a sidewall result disclaims tread, and
 that no screen claims a tread-depth measurement.

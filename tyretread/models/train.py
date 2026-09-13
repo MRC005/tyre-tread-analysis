@@ -6,8 +6,8 @@ its three-class boundaries from predictions the model had made on its own traini
 data, which is why those boundaries were never a measurement of anything
 (docs/AUDIT.md 3.4).
 
-Order of operations, and why
-----------------------------
+Order of operations, and why:
+
 1. **Candidates are pipelines, not bare estimators.** Scaling must be fitted inside
    each fold. Fitting a scaler on the whole dataset before cross-validation leaks
    the test folds' distribution into training.

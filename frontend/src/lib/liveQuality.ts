@@ -1,15 +1,11 @@
 /**
  * Live framing feedback, computed in the browser before the shutter is pressed.
  *
- * Why this exists
- * ---------------
  * The backend quality gate is honest but late: the user has already framed, tapped,
- * waited for an upload, and only then learns the photo was too dark. Research on
- * document-capture UX is consistent that the fix is feedback *during* framing, with
- * advice targeting the specific defect rather than a generic "poor quality".
+ * waited for an upload, and only then learns the photo was too dark. The fix is to give
+ * feedback *during* framing, naming the specific problem rather than a generic "poor
+ * quality" — the way document-scanning apps handle the same situation.
  *
- * What it is not
- * --------------
  * This is **not** the quality gate, and it does not decide anything. The backend gate
  * remains the authority — it works on the full-resolution image after ROI extraction,
  * measures things this cannot (oversampling against the analysis grid, blockiness,

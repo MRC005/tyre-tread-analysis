@@ -161,8 +161,8 @@ class EvidenceOut(BaseModel):
 class SurfaceOut(BaseModel):
     """Which part of the tyre the photograph appears to show.
 
-    Reported rather than enforced: the detector reaches AUC 0.806 [0.718, 0.884] on
-    120 hand-labelled images, which is not reliable enough to refuse an image, and the
+    Reported rather than enforced: the detector reaches AUC 0.797 [0.698, 0.878] on
+    116 hand-labelled images, which is not reliable enough to refuse an image, and the
     model performs comparably on both surfaces.
     """
 

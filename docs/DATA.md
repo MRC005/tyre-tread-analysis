@@ -130,7 +130,9 @@ Trivial appearance features score near chance, so the model is not simply tellin
 tyres from dirty ones. The discriminative power sits in surface **micro-texture**, which
 is what the pipeline was built to measure.
 
-The quality gate passes **93.5%** of this dataset, against 22% of the legacy one.
+The quality gate passes about **91%** of this dataset, against 22% of the legacy one.
+(It was 93.5% before `exp012` tightened the exposure, noise and compression checks;
+the images it now turns away are mostly genuinely too dark.)
 
 ### Required attribution
 

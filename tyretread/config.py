@@ -33,7 +33,7 @@ class ScaleConfig:
     source resolution. Because upsampling cannot create detail while downsampling
     packs real detail into high spatial frequencies, that made every
     frequency-domain feature a function of the source image's resolution and
-    compression history. Measured effect: +0.306 TSCI across a 128->1024 px
+    compression history. Measured effect: +0.266 TSCI across a 128->1024 px
     source-width sweep on identical tyres, versus a 0.074 good-vs-bad signal
     (docs/AUDIT.md 3.2, experiments/exp001_resolution_confound).
 
