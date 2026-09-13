@@ -5,6 +5,14 @@ Generated from the JSON records in this directory by
 hypothesis, what was run, what came out and what was decided as a result.
 A negative result with a clear decision is a successful experiment.
 
+Note on the feature cache. Most experiments read a cached feature table rather
+than re-extracting features. `exp012` tightened the quality gate, which changed
+how many images pass (1,735 before, 1,695 after). The cache was rebuilt then and
+`exp007` re-run against it, so the served model and its metrics are the
+post-tightening ones. `exp006`, `exp008`, `exp009` and `exp011` were not re-run,
+so their records below describe the 1,735-image pipeline. See the README under
+"Reproducing these figures" for what moves when they are.
+
 ---
 
 ## exp001_resolution_confound — TSCI responds to source resolution, not tread wear
