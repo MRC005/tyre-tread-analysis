@@ -150,8 +150,8 @@
       "n_cross_label_near_pairs": 1,
       "contradictory_groups": [
         [
-          "/Users/machumroychoudhury/tyre-tread-project/.claude/worktrees/tyre-tread-audit-925c11/data/bad/1666881312128.jpg",
-          "/Users/machumroychoudhury/tyre-tread-project/.claude/worktrees/tyre-tread-audit-925c11/data/good/1666881312128.jpg"
+          "data/bad/1666881312128.jpg",
+          "data/good/1666881312128.jpg"
         ]
       ]
     }

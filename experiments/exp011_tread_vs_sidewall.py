@@ -54,9 +54,27 @@ def model():
     ])
 
 
+def _relative(path: str) -> str:
+    """Path as written from the repository root, whatever prefix it was stored with."""
+    marker = "data/external/"
+    i = str(path).find(marker)
+    return str(path)[i:] if i != -1 else str(path)
+
+
 def main() -> None:
     annotations = pd.DataFrame(json.loads(ANNOTATIONS.read_text()))
-    joined = annotations.merge(pd.read_parquet(FEATURES), on="path", how="inner")
+    features = pd.read_parquet(FEATURES)
+    # The feature cache records whatever absolute path it was built under, while the
+    # committed annotations are repo-relative. Join on the relative form so the two
+    # match on any machine.
+    for frame in (annotations, features):
+        frame["path"] = frame["path"].map(_relative)
+    joined = annotations.merge(features, on="path", how="inner")
+    if joined.empty:
+        raise SystemExit(
+            "no annotated image matched the feature cache - rebuild "
+            f"{FEATURES} for this dataset"
+        )
     # The annotation set was sampled before the quality gate was tightened, so a few
     # of its images are now refused and carry no features. Analysing the surface
     # question on images the system would not assess anyway would misstate the problem.

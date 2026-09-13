@@ -80,8 +80,7 @@ coverage.xml
 # ---------------------------------------------------------------------------
 # Local tooling
 # ---------------------------------------------------------------------------
-# Agent/editor scratch state and worktrees. launch.json is a local dev-server
-# convenience, not project configuration.
+# Local editor/tooling scratch state and worktrees - not project configuration.
 .claude/
 
 # ---------------------------------------------------------------------------
